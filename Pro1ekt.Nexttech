@@ -1,0 +1,22 @@
+Hovedmål:
+1.	Udvikling af en automatiseret omkostningsberegningsløsning
+o	Målet er at udvikle et system, der nemt kan beregne omkostninger forbundet med 3D-print, herunder materialeforbrug, energiforbrug, maskinbrug og efterbehandling.
+_______________________________________________________________________________________________
+Delmål:
+1.1 Identifikation af nøgleparametre for omkostningsberegning
+•	Materialeforbrug (mængde, type, pris).
+•	Energiforbrug pr. printcyklus.
+•	Driftsomkostninger for maskinen (slid, vedligeholdelse, etc.).
+•	Efterbehandlingsomkostninger.
+_______________________________________________________________________________________________
+1.2 Integration af forskellige printere og materialeteknologier
+•	Udvikling af en skalerbar løsning, der kan anvendes på tværs af Nexttechs forskellige printertyper og materialeteknologier.
+•	Sikre at løsningen kan håndtere både enkle og komplekse printteknologier.
+_______________________________________________________________________________________________
+1.3 Brugervenligt interface
+•	Skabe en brugervenlig løsning, hvor operatører nemt kan indtaste og få beregnet omkostninger på tværs af forskellige printjobs.
+•	Integrere mulighed for at justere parametre for at simulere forskellige scenarier.
+_______________________________________________________________________________________________
+1.4 Optimering af ad hoc-processer
+•	Erstatte de nuværende besværlige ad hoc-processer med et system, der gør omkostningsberegningerne hurtigere, mere præcise og lette at gentage.
+
