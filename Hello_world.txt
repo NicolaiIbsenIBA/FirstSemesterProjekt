@@ -1,0 +1,2 @@
+cd /
+cd c/Users/belmi/projekt1/FirstSemesterProjekt
