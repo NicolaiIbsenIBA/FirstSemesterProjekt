@@ -1,35 +1,21 @@
 import my_functions as mf
 import my_classes as mc
+import my_queries as mq
 import pandas as pd
 
-try:
-    mf.drop_table()
-    print("Table dropped successfully")
-except Exception as e:
-    print(e)
+list_of_tables = ['MACHINE', 'WORKERS']
 
-try:
-    mf.create_table()
-    print("Table created successfully")
-except Exception as e:
-    print(e)
+mf.drop_table(list_of_tables)
 
-try:
-    mf.insert_table()
-    print("Data inserted successfully")
-except Exception as e:
-    print(e)
+mf.create_material_specifications_table()
+mf.create_workers_table()
 
-try:
-    table_liste = mf.select_table()
-    print("Data selected successfully")
-    database_dataframe = pd.DataFrame(table_liste, columns=['MATERIAL_ID', 'MACHINE', 'PROCESS', 'COST', 'UNIT', 'DENSITY'])
-except Exception as e:
-    print(e)
+mf.insert_table(mq.insert_material_specifications_query())
+mf.insert_table(mq.insert_workers_query())
+
+table_liste = mf.select_table("MACHINE")
+database_dataframe = pd.DataFrame(table_liste, columns=['MATERIAL_ID', 'MACHINE', 'PROCESS', 'COST', 'UNIT', 'DENSITY'])
 
 list_of_objects = []
 for index, row in database_dataframe.iterrows():
     list_of_objects.append(mc.ThreeDPrinting(row['MATERIAL_ID'], row['MACHINE'], row['PROCESS'], row['COST'], row['UNIT'], row['DENSITY']))
-
-for obj in list_of_objects:
-    print(obj.__str__())

@@ -1,7 +1,7 @@
 import pandas as pd
 import my_functions as mf
 
-process_list = pd.DataFrame ({
+material_specifications_data = pd.DataFrame ({
     'MATERIAL_ID': ['ABS', 'Ultem', 'Clear Resin', 'Dental Model Resin', 'Accura Xtreme', 'Casting Resin', 'PA2200', 'PA12', 'Alumide', 'Ti6Al4V', 'SSL316', 'Problack 10'],
     'MACHINE': ['Ultimaker 3', 'Fortus 360mc', 'Form2', 'Form2', 'ProX 950', 'Form2', 'EOSINT P800', 'EOSINT P800', 'EOSINT P800', 'EOSm100 or 400-4', 'EOSm100 or 400-4', '3D Systems Figure 4'],
     'PROCESS': ['FDM', 'FDM', 'SLA', 'SLA', 'SLA', 'SLA', 'SLS', 'SLS', 'SLS', 'SLM', 'SLM', 'DLP'],
@@ -10,8 +10,20 @@ process_list = pd.DataFrame ({
     'DENSITY': ['1,1', '1,27', '1,18', '1,18', '1,18', '1,18', '0,93', '1,01', '1,36', '4,43', '8', '1,07']
 })
 
-def insert_query():
-    my_insert_query = f"""INSERT INTO {mf.name_of_database} (MATERIAL_ID, MACHINE, PROCESS, COST, UNIT, DENSITY) VALUES"""
-    for index, row in process_list.iterrows():
+workers_data = pd.DataFrame ({
+    'PROCESS': ['FFF', 'FDM', 'SLA', 'DLP', 'SLS', 'SLM','FFF', 'FDM', 'SLA', 'DLP', 'SLS', 'SLM','FFF', 'FDM', 'SLA', 'DLP', 'SLS', 'SLM'],
+    'JOB_TITLE': ['engineer', 'engineer', 'engineer', 'engineer', 'engineer', 'engineer', 'operator', 'operator', 'operator', 'operator', 'operator', 'operator', 'technician', 'technician', 'technician', 'technician', 'technician', 'technician'],
+    'SALARY': [70, 70, 70, 70, 70, 70, 40, 40, 40, 50, 50, 50, 30, 30, 30, 30, 30, 30]
+})
+
+def insert_material_specifications_query():
+    my_insert_query = f"""INSERT INTO {mf.material_specifications_table} (MATERIAL_ID, MACHINE, PROCESS, COST, UNIT, DENSITY) VALUES"""
+    for index, row in material_specifications_data.iterrows():
         my_insert_query += f""" ('{row['MATERIAL_ID']}', '{row['MACHINE']}', '{row['PROCESS']}', {row['COST']}, '{row['UNIT']}', '{row['DENSITY']}'),"""
+    return (my_insert_query)[:-1]
+
+def insert_workers_query():
+    my_insert_query = f"""INSERT INTO {mf.workers_table} (PROCESS, JOB_TITLE, SALARY) VALUES"""
+    for index, row in workers_data.iterrows():
+        my_insert_query += f""" ('{row['PROCESS']}', '{row['JOB_TITLE']}', {row['SALARY']}),"""
     return (my_insert_query)[:-1]
