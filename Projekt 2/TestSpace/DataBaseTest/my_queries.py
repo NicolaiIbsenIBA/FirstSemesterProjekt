@@ -1,4 +1,5 @@
 import pandas as pd
+import my_functions as mf
 
 process_list = pd.DataFrame ({
     'MATERIAL_ID': ['ABS', 'Ultem', 'Clear Resin', 'Dental Model Resin', 'Accura Xtreme', 'Casting Resin', 'PA2200', 'PA12', 'Alumide', 'Ti6Al4V', 'SSL316', 'Problack 10'],
@@ -10,7 +11,7 @@ process_list = pd.DataFrame ({
 })
 
 def insert_query():
-    my_insert_query = f"""INSERT INTO my_table (MATERIAL_ID, MACHINE, PROCESS, COST, UNIT, DENSITY) VALUES"""
+    my_insert_query = f"""INSERT INTO {mf.name_of_database} (MATERIAL_ID, MACHINE, PROCESS, COST, UNIT, DENSITY) VALUES"""
     for index, row in process_list.iterrows():
         my_insert_query += f""" ('{row['MATERIAL_ID']}', '{row['MACHINE']}', '{row['PROCESS']}', {row['COST']}, '{row['UNIT']}', '{row['DENSITY']}'),"""
     return (my_insert_query)[:-1]

@@ -1,9 +1,9 @@
 import sqlite3 as sql
 import my_queries as mq
 
-name_of_database = 'NEXTTECH_3D_PRINTING.db'
+name_of_database = 'NEXTTECH_3D_PRINTING'
 
-con = sql.connect(f'{name_of_database}')
+con = sql.connect(f'{name_of_database}.db')
 
 def create_table():
     try:
@@ -13,7 +13,7 @@ def create_table():
                     PROCESS TEXT,
                     COST FLOAT,
                     UNIT TEXT,
-                    DENSITY TEXT);d""")
+                    DENSITY TEXT);""")
         con.commit()
     except Exception as e:
         print(e)
