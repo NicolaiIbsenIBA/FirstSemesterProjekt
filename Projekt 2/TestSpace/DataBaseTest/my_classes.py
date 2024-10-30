@@ -8,4 +8,4 @@ class ThreeDPrinting:
         self.density = density
     
     def __str__(self):
-        return f"{self.material_id} is a {self.process} material that costs {self.cost} {self.unit} per {self.density}, created in a {self.machine} machine."
+        return f"{self.material_id} is a {self.process} material that costs {self.cost} per {self.unit} and has a density of {self.density} g/cm^3, created in a {self.machine} machine."

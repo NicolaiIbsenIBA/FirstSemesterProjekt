@@ -7,7 +7,7 @@ con = sql.connect(f'{name_of_database}')
 
 def create_table():
     try:
-        con.execute("""CREATE TABLE my_table (
+        con.execute(f"""CREATE TABLE {name_of_database} (
                     MATERIAL_ID TEXT PRIMARY KEY, 
                     MACHINE TEXT, 
                     PROCESS TEXT,
@@ -20,7 +20,7 @@ def create_table():
 
 def drop_table():
     try:
-        con.execute("DROP TABLE my_table")
+        con.execute(f"DROP TABLE {name_of_database}")
         con.commit()
     except Exception as e:
         print(e)
@@ -34,7 +34,7 @@ def insert_table():
 
 def select_table():
     try:
-        cursor = con.execute("SELECT * FROM my_table")
+        cursor = con.execute(f"SELECT * FROM {name_of_database}")
         return cursor.fetchall()
     except Exception as e:
         print(e)
