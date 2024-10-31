@@ -16,6 +16,17 @@ mf.insert_table(mq.insert_workers_query())
 table_liste = mf.select_table("MACHINE")
 database_dataframe = pd.DataFrame(table_liste, columns=['MATERIAL_ID', 'MACHINE', 'PROCESS', 'COST', 'UNIT', 'DENSITY'])
 
+print('')
+print(database_dataframe)
+
+print('')
+for index, row in database_dataframe.iterrows():
+    print(row['MATERIAL_ID'], row['MACHINE'], row['PROCESS'], row['COST'], row['UNIT'], row['DENSITY'])
+
 list_of_objects = []
 for index, row in database_dataframe.iterrows():
     list_of_objects.append(mc.ThreeDPrinting(row['MATERIAL_ID'], row['MACHINE'], row['PROCESS'], row['COST'], row['UNIT'], row['DENSITY']))
+
+print('')
+for obj in list_of_objects:
+    print(obj.process)

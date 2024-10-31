@@ -1,5 +1,5 @@
 import sqlite3 as sql
-import my_queries as mq
+import my_names as my_n
 
 name_of_database = 'NEXTTECH_3D_PRINTING'
 material_specifications_table = 'MACHINE'
