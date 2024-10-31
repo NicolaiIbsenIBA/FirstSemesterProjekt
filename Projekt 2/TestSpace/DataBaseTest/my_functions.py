@@ -1,15 +1,11 @@
 import sqlite3 as sql
 import my_names as my_n
 
-name_of_database = 'NEXTTECH_3D_PRINTING'
-material_specifications_table = 'MACHINE'
-workers_table = 'WORKERS'
-
-con = sql.connect(f'{name_of_database}.db')
+con = sql.connect(f'{my_n.name_of_database}.db')
 
 def create_material_specifications_table():
     try:
-        con.execute(f"""CREATE TABLE {material_specifications_table} (
+        con.execute(f"""CREATE TABLE {my_n.material_specifications_table} (
                     MATERIAL_ID TEXT PRIMARY KEY, 
                     MACHINE TEXT, 
                     PROCESS TEXT,
@@ -17,20 +13,20 @@ def create_material_specifications_table():
                     UNIT TEXT,
                     DENSITY TEXT);""")
         con.commit()  
-        print(f"'{material_specifications_table}' table created successfully")
+        print(f"'{my_n.material_specifications_table}' table created successfully")
     except Exception as e:
         print(e)
 
 def create_workers_table():
     try:
-        con.execute(f"""CREATE TABLE {workers_table} (
+        con.execute(f"""CREATE TABLE {my_n.workers_table} (
                         PROCESS TEXT,
                         JOB_TITLE TEXT,
                         SALARY TEXT,
                         PRIMARY KEY (PROCESS, JOB_TITLE)
                     );""")
         con.commit()
-        print(f"'{workers_table}' table created successfully")
+        print(f"'{my_n.workers_table}' table created successfully")
     except Exception as e:
         print(e)
 

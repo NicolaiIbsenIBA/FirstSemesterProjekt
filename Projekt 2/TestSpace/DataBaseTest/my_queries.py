@@ -1,5 +1,5 @@
 import pandas as pd
-import my_functions as mf
+import my_names as my_n
 
 material_specifications_data = pd.DataFrame ({
     'MATERIAL_ID': ['ABS', 'Ultem', 'Clear Resin', 'Dental Model Resin', 'Accura Xtreme', 'Casting Resin', 'PA2200', 'PA12', 'Alumide', 'Ti6Al4V', 'SSL316', 'Problack 10'],
@@ -17,13 +17,13 @@ workers_data = pd.DataFrame ({
 })
 
 def insert_material_specifications_query():
-    my_insert_query = f"""INSERT INTO {mf.material_specifications_table} (MATERIAL_ID, MACHINE, PROCESS, COST, UNIT, DENSITY) VALUES"""
+    my_insert_query = f"""INSERT INTO {my_n.material_specifications_table} (MATERIAL_ID, MACHINE, PROCESS, COST, UNIT, DENSITY) VALUES"""
     for index, row in material_specifications_data.iterrows():
         my_insert_query += f""" ('{row['MATERIAL_ID']}', '{row['MACHINE']}', '{row['PROCESS']}', {row['COST']}, '{row['UNIT']}', '{row['DENSITY']}'),"""
     return (my_insert_query)[:-1]
 
 def insert_workers_query():
-    my_insert_query = f"""INSERT INTO {mf.workers_table} (PROCESS, JOB_TITLE, SALARY) VALUES"""
+    my_insert_query = f"""INSERT INTO {my_n.workers_table} (PROCESS, JOB_TITLE, SALARY) VALUES"""
     for index, row in workers_data.iterrows():
         my_insert_query += f""" ('{row['PROCESS']}', '{row['JOB_TITLE']}', {row['SALARY']}),"""
     return (my_insert_query)[:-1]
