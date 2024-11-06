@@ -99,6 +99,10 @@ def my_loop():
                 except ValueError:
                     print(f"Please enter a whole numbers for each of the type of worker you need.")
                 print("")
+        # 
+        elif inp == '2':
+            print("some option")
+            
 
         inp = options()
             
