@@ -48,9 +48,9 @@ def login_window():
                                  command=lambda: login(username_entry.get(), password_entry.get()))
     
     show_password_btn = ctk.CTkButton(my_frame,
-                                  text='*',
-                                  command=show_password,
-                                  width=20)
+                                      text='*',
+                                      command=show_password,
+                                      width=20)
 
     my_frame.pack()
     username_label.grid(row=0, column=0)
@@ -71,4 +71,3 @@ def login_window():
     
 
     login_root.mainloop()
-login_window()
