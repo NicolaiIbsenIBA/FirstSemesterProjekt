@@ -4,7 +4,7 @@ from tkinter import *  # Import ttk separately for Treeview
 import my_queries as mq
 import pandas as pd
 from PIL import Image
-import my_names as mn
+import Simpel.my_names as mn
 
 def show_table(master, liste):
     # Create a Frame for the Treeview (for styling)

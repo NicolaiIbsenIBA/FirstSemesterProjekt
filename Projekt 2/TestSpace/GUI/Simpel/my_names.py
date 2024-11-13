@@ -1,4 +1,9 @@
-import Simpel.classes as cl
+import classes as cl
+import pandas as pd
+
+labelgen = pd.DataFrame ({
+            'Settings': ['Material Specifications', 'Workers', 'Machines', 'Products', 'Orders', 'Settings', 'Settings', 'Settings', 'Settings', 'Settings', 'Settings', 'Settings'],
+})
 
 # Database name and tables names
 name_of_database = 'NEXTTECH_3D_PRINTING'

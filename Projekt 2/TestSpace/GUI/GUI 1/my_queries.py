@@ -1,5 +1,5 @@
 import pandas as pd
-import my_names as mn
+import Simpel.my_names as mn
 
 material_specifications_data = pd.DataFrame ({
     'MATERIAL_ID': ['ABS', 'Ultem', 'Clear Resin', 'Dental Model Resin', 'Accura Xtreme', 'Casting Resin', 'PA2200', 'PA12', 'Alumide', 'Ti6Al4V', 'SSL316', 'Problack 10'],

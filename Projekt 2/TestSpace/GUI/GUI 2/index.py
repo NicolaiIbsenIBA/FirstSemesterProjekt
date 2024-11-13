@@ -1,6 +1,6 @@
 import customtkinter as c
 import my_queries as mq
-import my_names as mn
+import Simpel.my_names as mn
 import structure
 import home as h
 import login as l
@@ -11,8 +11,10 @@ master.title("NextText CALC")
 master.geometry("800x800")
 master.iconbitmap("Assets/IBA_icon_ico.ico")
 master._set_appearance_mode("system")
+
 # Header
-structure.header_frame(master)
+header = structure.header_frame(master)
+print(header._current_height)
 
 ### Body start
 scrollable_frame = c.CTkScrollableFrame(master,
@@ -20,7 +22,8 @@ scrollable_frame = c.CTkScrollableFrame(master,
                                         fg_color=mn.primary_grey,)
 ### Body start
 
-l.login_content(scrollable_frame, mn.my_list)
+l.login_content(scrollable_frame)
+
 
 
 ### Body end

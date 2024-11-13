@@ -2,14 +2,15 @@ import my_queries as mq
 from tkinter import *
 import customtkinter as ctk
 import home as h
-import classes as cl
+import Simpel.classes as cl
+import Simpel.my_names as mn
 
 def clear_frame(frame):
     print("Clearing frame")
     for widget in frame.winfo_children():
         widget.destroy()
 
-def login_content(master, my_list):
+def login_content(master):
     # Login function
     my_frame = ctk.CTkFrame(master,
                             fg_color='#009fe3')
@@ -26,7 +27,7 @@ def login_content(master, my_list):
     
     login_button = ctk.CTkButton(my_frame,
                                  text='Login',
-                                 command=lambda: login(master, username_entry.get(), password_entry.get(), username_entry, password_entry, my_list))
+                                 command=lambda: login(master, username_entry.get(), password_entry.get(), username_entry, password_entry))
     
     show_password_btn = ctk.CTkButton(my_frame,
                                       text='*',
@@ -45,17 +46,17 @@ def login_content(master, my_list):
     master.after(50, lambda: username_entry.focus())
 
     username_entry.bind('<Return>', lambda event: password_entry.focus())
-    password_entry.bind('<Return>', lambda event: login(master, username_entry.get(), password_entry.get(), username_entry, password_entry, my_list))
+    password_entry.bind('<Return>', lambda event: login(master, username_entry.get(), password_entry.get(), username_entry, password_entry))
 
     password_entry.bind('<Up>', lambda event: username_entry.focus())
     username_entry.bind('<Down>', lambda event: password_entry.focus())
 
-def login(master, username, password, username_entry, password_entry, my_list):
+def login(master, username, password, username_entry, password_entry):
     if username == 'admin' and password == 'admin':
         print('Login successful')
-        my_list.append(cl.Credentials(username, password, True))
         clear_frame(master)
         h.homepage_content(master)
+        mn.user = cl.Credentials(username, password, True)
     else:
         print('Login failed')
         username_entry.configure(border_color='red')
