@@ -10,23 +10,40 @@ name_of_database = 'NEXTTECH_3D_PRINTING'
 material_specifications_table = 'MACHINE'
 workers_table = 'WORKERS'
 
+# Name of app
+app_title = "NextTech CALC"
+
 # Assets
 logo = "Assets/logo.png"
+admin_logo = "Assets/logo_admin.png"
 home_icon = "Assets/IBA_icon.png"
 ico = "Assets/IBA_icon_ico.ico"
 
 # Colors
 light_color = "#f4f4f4"
 blue_color = "#009fe3"
-green_color = "#76b82a"
+green_color = "#6da924"
 primary_grey = "#d9d9d9"
-secondary_grey = "#2d2d2d"
+secondary_grey = "#565b5e"
 black = "#000000"
 
+# Global variables
 global user
 user = cl.Credentials("", "", False) 
+global current_page
+current_page = ""
+global dictionary
+dictionary = {
+    "material_specifications_data": None,
+    "workers_data": None,
+}
+
 
 def clear_frame(frame):
-    print("Clearing frame")
+    frame_name = getattr(frame, "custom_name", "Unnamed Frame")
+    try:
+        print(f"Clearing frame '{frame_name}'")
+    except:
+        print("Clearing frame")
     for widget in frame.winfo_children():
         widget.destroy()
