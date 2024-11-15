@@ -82,6 +82,21 @@ def sql_create_workers_table():
     except Exception as e:
         print(e)
 
+# Update queries
+def sql_update_material_specifications_data(query):
+    try:
+        query.to_sql('MATERIAL_SPECIFICATIONS', con, if_exists='replace', index=False)
+        con.commit()
+    except Exception as e:
+        print(e)
+
+def sql_update_workers_data(query):
+    try:
+        query.to_sql('WORKERS', con, if_exists='replace', index=False)
+        con.commit()
+    except Exception as e:
+        print(e)
+
 # Drop queries
 def sql_drop_material_specifications_table():
     try:

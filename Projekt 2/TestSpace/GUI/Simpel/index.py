@@ -9,6 +9,7 @@ import NextTech_db as ntdb
 import time
 import pandas as pd
 import sqlite3
+import Datahandling as dh
 
 # Declare variables
 user = cl.Credentials(None, None, False)
@@ -189,14 +190,14 @@ dropdown = ctk.CTkComboBox(header,
                            values=["Material Specifications", "Workers"])
 dropdown.grid(row=0, column=5, sticky="e", padx=3, pady=3)
 
-def grid_configure():
-    header.grid_columnconfigure(0, weight=1)
-    header.grid_columnconfigure(1, weight=1)
-    header.grid_columnconfigure(2, weight=1)
-    header.grid_columnconfigure(3, weight=2)
-    header.grid_columnconfigure(4, weight=1)
-    header.grid_columnconfigure(5, weight=1)
-grid_configure()
+def grid_configure(header_frame):
+    header_frame.grid_columnconfigure(0, weight=1)
+    header_frame.grid_columnconfigure(1, weight=1)
+    header_frame.grid_columnconfigure(2, weight=1)
+    header_frame.grid_columnconfigure(3, weight=2)
+    header_frame.grid_columnconfigure(4, weight=1)
+    header_frame.grid_columnconfigure(5, weight=1)
+grid_configure(header)
 
 # Body
 body = ctk.CTkScrollableFrame(master,
@@ -324,6 +325,12 @@ def database_page(frame):
 
         minor_db_frame1.pack(padx = 3, pady=3, fill="both")
         minor_db_frame2.pack(padx = 3, pady=3, fill="both")
+
+        confirm_btn = ctk.CTkButton(frame,
+                                    text="Confirm",
+                                    fg_color=mn.green_color,
+                                    command=lambda: dh.confirm_changed_workers())
+        confirm_btn.pack(side="bottom", fill="both")
 
         if mn.dictionary["material_specifications_data"] is None:
             mn.dictionary["material_specifications_data"] = ntdb.sql_select_material_specifications_data()
