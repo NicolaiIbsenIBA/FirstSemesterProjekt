@@ -74,7 +74,7 @@ def sql_create_workers_table():
             CREATE TABLE IF NOT EXISTS WORKERS (
                 PROCESS TEXT NOT NULL,
                 JOB_TITLE TEXT NOT NULL,
-                SALARY REAL NOT NULL,
+                SALARY FLOAT NOT NULL,
                 PRIMARY KEY (PROCESS, JOB_TITLE)
             )
         ''')
@@ -90,10 +90,24 @@ def sql_update_material_specifications_data(query):
     except Exception as e:
         print(e)
 
+def sql_update_material_specifications_data(df):
+    try:
+        cursor = con.cursor()
+        for _, row in df.iterrows():
+            cursor.execute('''
+                UPDATE MATERIAL_SPECIFICATIONS
+                SET MaterialName = ?, Density = ?, TensileStrength = ?
+                WHERE MaterialID = ?
+            ''', (row['MaterialName'], row['Density'], row['TensileStrength'], row['MaterialID']))
+        con.commit()
+    except Exception as e:
+        print(e)
+
 def sql_update_workers_data(query):
     try:
-        query.to_sql('WORKERS', con, if_exists='replace', index=False)
-        con.commit()
+        for i in query:
+            con.execute(i)
+            con.commit()
     except Exception as e:
         print(e)
 
@@ -122,6 +136,10 @@ def restart_workers_table():
     sql_drop_workers_table()
     sql_create_workers_table()
     sql_insert_workers_data(workers_data)
+
+def restart_tables_NextTech_db():
+    restart_material_specifications_table()
+    restart_workers_table()
 
 # Call functions
 # restart_material_specifications_table()

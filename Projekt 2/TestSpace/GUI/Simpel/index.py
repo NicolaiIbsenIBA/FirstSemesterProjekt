@@ -10,6 +10,7 @@ import time
 import pandas as pd
 import sqlite3
 import Datahandling as dh
+import table_setup as ts
 
 # Declare variables
 user = cl.Credentials(None, None, False)
@@ -64,7 +65,7 @@ def button_gen(frame, buttons):
         if buttons.__len__() == i:
             return button_list
 
-def show_table(frame, liste):
+def decrepit_show_table(frame, liste):
         # Create a Frame for the Treeview (for styling)
         frame1 = ctk.CTkFrame(frame)
         frame1.pack(fill="both", padx= 20, pady=20)  # Pack the frame to make it visible
@@ -109,6 +110,7 @@ def login(username, username_entry, password_entry):
         user.username = username
         if check[1] == 1:
             user.admin = True
+            mn.user = user
             logo_label.configure(image=admin_logo)
         else:
             user.admin = False
@@ -228,10 +230,11 @@ def login_page(frame):
     username_entry.grid(row=0, column=1, sticky="w", padx=5, pady=5)
 
     password_label = ctk.CTkLabel(login_frame,
-                                  text="Password")
+                                  text="Password",)
     password_label.grid(row=1, column=0, sticky="w", padx=5, pady=5)
 
-    password_entry = ctk.CTkEntry(login_frame)
+    password_entry = ctk.CTkEntry(login_frame,
+                                  show="*")
     password_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
 
     login_button = ctk.CTkButton(login_frame,
@@ -315,30 +318,27 @@ def database_page(frame):
         mn.clear_frame(frame)
         frame_configure(frame)
 
-        minor_db_frame1 = ctk.CTkScrollableFrame(frame,
+        minor_db_frame1 = ctk.CTkFrame(frame,
                                                  bg_color=mn.primary_grey,
-                                                 fg_color=mn.primary_grey)
+                                                 fg_color=mn.primary_grey, 
+                                                 width=frame._current_width,
+                                                 height=400)
 
         minor_db_frame2 = ctk.CTkFrame(frame,
                                        bg_color=mn.primary_grey,
-                                       fg_color=mn.primary_grey)
+                                       fg_color=mn.primary_grey,
+                                       width=frame._current_width)
 
-        minor_db_frame1.pack(padx = 3, pady=3, fill="both")
-        minor_db_frame2.pack(padx = 3, pady=3, fill="both")
+        tabel = ts.show_table(minor_db_frame1, ntdb.sql_select_workers_data())
+        
+        minor_db_frame1.pack(padx = 3, pady=3, fill="both", expand=True)
+        # minor_db_frame2.pack(padx = 3, pady=3, fill="both")
 
-        confirm_btn = ctk.CTkButton(frame,
+        """confirm_btn = ctk.CTkButton(frame,
                                     text="Confirm",
                                     fg_color=mn.green_color,
-                                    command=lambda: dh.confirm_changed_workers())
-        confirm_btn.pack(side="bottom", fill="both")
-
-        if mn.dictionary["material_specifications_data"] is None:
-            mn.dictionary["material_specifications_data"] = ntdb.sql_select_material_specifications_data()
-        if mn.dictionary["workers_data"] is None:
-            mn.dictionary["workers_data"] = ntdb.sql_select_workers_data()
-
-        show_table(minor_db_frame1, mn.dictionary["material_specifications_data"])
-        show_table(minor_db_frame2, mn.dictionary["workers_data"])
+                                    command=lambda: ts.changes_made(ntdb.sql_select_workers_data(), ts.get_table_as_dataframe(tabel)))
+        confirm_btn.pack(side="bottom", fill="both")"""
 
         mn.current_page = "Database"
         master.title(f"{mn.app_title} - {mn.current_page}")
@@ -405,6 +405,11 @@ footer.custom_name = "footer"
 footer.pack(side="bottom", fill="both")
 
 # Tkinter functions
+
+# Reset databases
+# ntdb.restart_tables_NextTech_db()
+# udb.restart_tables_UserCredentials_db()
+
 
 # Run main loop
 master.mainloop()

@@ -100,6 +100,10 @@ def restart_label_table():
     create_label_table()
     insert_label(["Material Specifications", "Workers", "Machines", "Products", "Orders", "Settings", "Settings", "Settings", "Settings", "Settings", "Settings", "Settings"])
 
+def restart_tables_UserCredentials_db():
+    restart_user_table()
+    restart_label_table()
+
 # Call function
 # restart_user_table()
 # restart_label_table()

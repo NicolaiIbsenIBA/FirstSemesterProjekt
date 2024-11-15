@@ -2,8 +2,8 @@ import my_queries as mq
 from tkinter import *
 import customtkinter as ctk
 import home as h
-import Simpel.classes as cl
-import Simpel.my_names as mn
+import classes as cl
+import my_names as mn
 
 def clear_frame(frame):
     print("Clearing frame")
