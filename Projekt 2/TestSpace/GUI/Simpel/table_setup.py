@@ -20,8 +20,6 @@ def show_table(frame, data):
 
     for _, row in data.iterrows():
         values = row.tolist()
-        # Format the 3rd entry to show only whole numbers
-        values[2] = int(values[2])
         table.insert('', 'end', values=values)
     
     # Add vertical scrollbar
@@ -29,34 +27,54 @@ def show_table(frame, data):
     table.configure(yscrollcommand=vsb.set)
     vsb.pack(side='right', fill='y')
 
+    # Add horizontal scrollbar
+    hsb = ttk.Scrollbar(frame, orient="horizontal", command=table.xview)
+    table.configure(xscrollcommand=hsb.set)
+    hsb.pack(side='bottom', fill='x')
+
     table.pack(fill='both', expand=True)
 
     if mn.user.admin:
         # Add button to save changes
-        table.bind('<Double-1>', lambda event: on_double_click(event, table, frame))
+        table.bind('<Double-1>', lambda event: on_double_click(event, table, frame, columns))
         save_button = ctk.CTkButton(frame, text='Save changes', 
                                     command=lambda: changes_made(data, get_table_as_dataframe(table)))
         save_button.pack(side='bottom')
     return table
 
-def on_double_click(event, table, frame):
+def on_double_click(event, table, frame, columns):
+    print(columns)
     item = table.selection()[0]
     column = table.identify_column(event.x)
     row = table.identify_row(event.y)
     col_index = int(column.replace('#', '')) - 1
-    if col_index == 2:  # Only allow editing the Salary column
-        x, y, width, height = table.bbox(item, column)
-        entry = tk.Entry(frame)
-        entry.place(x=x, y=y, width=width, height=height)
-        entry.focus()
-        entry.insert(0, table.item(item)['values'][col_index])
+    if columns == ['Process', 'Job title', 'Salary']:
+        if col_index == 2:  # Only allow editing the Salary column
+            x, y, width, height = table.bbox(item, column)
+            entry = tk.Entry(frame)
+            entry.place(x=x, y=y, width=width, height=height)
+            entry.focus()
+            entry.insert(0, table.item(item)['values'][col_index])
+            def on_exit_of_entry(event):
+                table.set(item, column=column, value=entry.get())
+                entry.destroy()
+            entry.bind('<Return>', on_exit_of_entry)
+            entry.bind('<FocusOut>', on_exit_of_entry)
+    elif columns == ['Material id', 'Machine', 'Process', 'Cost', 'Unit', 'Density']:
+        if col_index == 3:  # Only allow editing the Cost column
+            x, y, width, height = table.bbox(item, column)
+            entry = tk.Entry(frame)
+            entry.place(x=x, y=y, width=width, height=height)
+            entry.focus()
+            entry.insert(0, table.item(item)['values'][col_index])
+            def on_exit_of_entry(event):
+                table.set(item, column=column, value=entry.get())
+                entry.destroy()
+            entry.bind('<Return>', on_exit_of_entry)
+            entry.bind('<FocusOut>', on_exit_of_entry)
 
-        def on_exit_of_entry(event):
-            table.set(item, column=column, value=entry.get())
-            entry.destroy()
-
-        entry.bind('<Return>', on_exit_of_entry)
-        entry.bind('<FocusOut>', on_exit_of_entry)
+    
+    
 
 def sort_treeview(tree, col, reverse):
     l = [(tree.set(k, col), k) for k in tree.get_children('')]
@@ -78,28 +96,45 @@ def get_table_as_dataframe(tree):
     return pd.DataFrame(data)
 
 def changes_made(database, tabel):
-    tabel.columns = tabel.columns.str.upper()
+    tabel.columns = tabel.columns.str.upper()  # Capitalize and replace spaces with underscores
 
     database_list = database.values.tolist()  # pd.dataframe to list
     tabel_list = tabel.values.tolist()
 
     for i in tabel_list:
-        for j in i:
-            if type(j) == float:
-                j = int(j)
+        for j in range(len(i)):
+            try:
+                # Try to convert to integer
+                i[j] = int(i[j])
+            except ValueError:
+                try:
+                    # Try to convert to float if integer conversion fails
+                    i[j] = float(i[j])
+                except ValueError:
+                    # If both conversions fail, leave the value as is
+                    pass
 
     database_set = set(map(tuple, database_list))
     tabel_set = set(map(tuple, tabel_list))
-
+    
     if database_set == tabel_set:
         print("No changes made")
     else:
         print("Changes made")
-        ntdb.sql_update_workers_data(create_query_changes_made(list(tabel_set.difference(database_set))))
+        if database.columns.str.upper().tolist() == mn.workers_columns:
+            ntdb.sql_update(query_changes_made_workers(list(tabel_set.difference(database_set))))
+        elif database.columns.str.upper().tolist() == mn.material_columns:
+            ntdb.sql_update(query_changes_material_specifications(list(tabel_set.difference(database_set))))
 
-def create_query_changes_made(changes):
+def query_changes_made_workers(changes):
     query_list = []
     for i in changes:
         query_list.append(f"UPDATE WORKERS SET SALARY = {i[2]} WHERE PROCESS = '{i[0]}' AND JOB_TITLE = '{i[1]}'")
+    return query_list
+
+def query_changes_material_specifications(changes):
+    query_list = []
+    for i in changes:
+        query_list.append(f"UPDATE MATERIAL_SPECIFICATIONS SET COST = {i[3]} WHERE MATERIAL_ID = '{i[0]}'")
     return query_list
     

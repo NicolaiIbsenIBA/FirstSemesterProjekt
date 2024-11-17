@@ -8,7 +8,9 @@ labelgen = pd.DataFrame ({
 # Database name and tables names
 name_of_database = 'NEXTTECH_3D_PRINTING'
 material_specifications_table = 'MACHINE'
+material_columns = ['MATERIAL_ID', 'MACHINE', 'PROCESS', 'COST', 'UNIT', 'DENSITY']
 workers_table = 'WORKERS'
+workers_columns = ['PROCESS', 'JOB_TITLE', 'SALARY']
 
 # Name of app
 app_title = "NextTech CALC"

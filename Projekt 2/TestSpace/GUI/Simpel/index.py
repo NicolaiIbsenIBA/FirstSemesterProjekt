@@ -330,9 +330,11 @@ def database_page(frame):
                                        width=frame._current_width)
 
         tabel = ts.show_table(minor_db_frame1, ntdb.sql_select_workers_data())
+        tabel = ts.show_table(minor_db_frame2, ntdb.sql_select_material_specifications_data())
+
         
         minor_db_frame1.pack(padx = 3, pady=3, fill="both", expand=True)
-        # minor_db_frame2.pack(padx = 3, pady=3, fill="both")
+        minor_db_frame2.pack(padx = 3, pady=3, fill="both")
 
         """confirm_btn = ctk.CTkButton(frame,
                                     text="Confirm",

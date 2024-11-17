@@ -103,7 +103,7 @@ def sql_update_material_specifications_data(df):
     except Exception as e:
         print(e)
 
-def sql_update_workers_data(query):
+def sql_update(query):
     try:
         for i in query:
             con.execute(i)
