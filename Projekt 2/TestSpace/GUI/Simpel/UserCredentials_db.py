@@ -1,6 +1,8 @@
 import sqlite3 as sql
 import pandas as pd
 import classes as cl
+import logs_db as ldb
+import my_names as mn
 
 con = sql.connect(f'Simpel/UserCredentials.db')
 
@@ -29,6 +31,10 @@ def insert_user(username, password, admin):
                     ('{username}', '{password}', {admin})""")
         con.commit()
         print(f"user '{username}' inserted in UserCredentials")
+
+        # Insert log
+        ldb.insert_user_creation_logs(mn.user.username, username)
+
     except sql.IntegrityError as e:
         raise NameError("User already exists")
     except Exception as e:

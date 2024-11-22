@@ -23,12 +23,12 @@ def show_table(frame, data):
         table.insert('', 'end', values=values)
     
     # Add vertical scrollbar
-    vsb = ttk.Scrollbar(frame, orient="vertical", command=table.yview)
+    vsb = ctk.CTkScrollbar(frame, orientation="vertical", command=table.yview)
     table.configure(yscrollcommand=vsb.set)
     vsb.pack(side='right', fill='y')
 
     # Add horizontal scrollbar
-    hsb = ttk.Scrollbar(frame, orient="horizontal", command=table.xview)
+    hsb = ctk.CTkScrollbar(frame, orientation="horizontal", command=table.xview)
     table.configure(xscrollcommand=hsb.set)
     hsb.pack(side='bottom', fill='x')
 
