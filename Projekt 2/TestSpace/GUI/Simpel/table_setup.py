@@ -16,7 +16,7 @@ def show_table(frame, data):
 
     for col in columns:
         table.heading(col, text=col, command=lambda _col=col: sort_treeview(table, _col, False))
-        table.column(col, anchor='center')
+        table.column(col, anchor='center', width=100, stretch=True)
 
     for _, row in data.iterrows():
         values = row.tolist()
@@ -32,53 +32,47 @@ def show_table(frame, data):
     table.configure(xscrollcommand=hsb.set)
     hsb.pack(side='bottom', fill='x')
 
-    table.pack(fill='both', expand=True)
-
     if mn.user.admin:
         # Add button to save changes
-        table.bind('<Double-1>', lambda event: on_double_click(event, table, frame, columns))
+        table.bind('<Double-1>', lambda event: on_double_click(event))
         save_button = ctk.CTkButton(frame, text='Save changes', 
                                     command=lambda: changes_made(data, get_table_as_dataframe(table)))
         save_button.pack(side='bottom')
-    return table
 
-def on_double_click(event, table, frame, columns):
-    print(columns)
-    item = table.selection()[0]
-    column = table.identify_column(event.x)
-    row = table.identify_row(event.y)
-    col_index = int(column.replace('#', '')) - 1
-    if columns == ['Process', 'Job title', 'Salary']:
-        if col_index == 2:  # Only allow editing the Salary column
-            x, y, width, height = table.bbox(item, column)
-            entry = tk.Entry(frame)
-            entry.place(x=x, y=y, width=width, height=height)
-            entry.focus()
-            entry.insert(0, table.item(item)['values'][col_index])
-            def on_exit_of_entry(event):
-                table.set(item, column=column, value=entry.get())
-                entry.destroy()
-            entry.bind('<Return>', on_exit_of_entry)
-            entry.bind('<FocusOut>', on_exit_of_entry)
-    elif columns == ['Material id', 'Machine', 'Process', 'Cost', 'Unit', 'Density']:
-        if col_index == 3:  # Only allow editing the Cost column
-            x, y, width, height = table.bbox(item, column)
-            entry = tk.Entry(frame)
-            entry.place(x=x, y=y, width=width, height=height)
-            entry.focus()
-            entry.insert(0, table.item(item)['values'][col_index])
-            def on_exit_of_entry(event):
-                table.set(item, column=column, value=entry.get())
-                entry.destroy()
-            entry.bind('<Return>', on_exit_of_entry)
-            entry.bind('<FocusOut>', on_exit_of_entry)
+    table.pack(fill='both', expand=True)
 
-    
-    
+    def create_entry_widget(item, column, col_index):
+        x, y, width, height = table.bbox(item, column)
+        entry = tk.Entry(frame)
+        entry.place(x=x, y=y, width=width, height=height)
+        entry.focus()
+        entry.insert(0, table.item(item)['values'][col_index])
+
+        def on_exit_of_entry(event):
+            table.set(item, column=column, value=entry.get())
+            entry.destroy()
+
+        entry.bind('<Return>', on_exit_of_entry)
+        entry.bind('<FocusOut>', on_exit_of_entry)
+
+    def on_double_click(event):
+        item = table.selection()
+        if not item:
+            return  # Ignore double-clicks on column headers
+        item = item[0]
+        column = table.identify_column(event.x)
+        row = table.identify_row(event.y)
+        col_index = int(column.replace('#', '')) - 1
+        if columns == ['Process', 'Job title', 'Salary'] and col_index == 2:
+            create_entry_widget(item, column, col_index)
+        elif columns == ['Material id', 'Machine', 'Process', 'Cost', 'Unit', 'Density'] and col_index == 3:
+            create_entry_widget(item, column, col_index)
 
 def sort_treeview(tree, col, reverse):
     l = [(tree.set(k, col), k) for k in tree.get_children('')]
     if col == 'Salary':
+        l.sort(key=lambda x: float(x[0]), reverse=reverse)
+    elif col == 'Cost':
         l.sort(key=lambda x: float(x[0]), reverse=reverse)
     else:
         l.sort(reverse=reverse)

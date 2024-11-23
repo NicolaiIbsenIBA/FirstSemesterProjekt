@@ -30,7 +30,6 @@ def insert_user(username, password, admin):
         con.execute(f"""INSERT INTO UserCredential (username, password, admin) VALUES 
                     ('{username}', '{password}', {admin})""")
         con.commit()
-        print(f"user '{username}' inserted in UserCredentials")
 
         # Insert log
         ldb.insert_user_creation_logs(mn.user.username, username)

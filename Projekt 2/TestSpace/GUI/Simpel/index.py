@@ -132,14 +132,14 @@ user_label = ctk.CTkLabel(header,
                            text=f"Log in to use application",)
 user_label.grid(row=0, column=5, sticky="e", padx=8, pady=0)
 
-def grid_configure(header_frame):
+def my_grid_configure(header_frame):
     header_frame.grid_columnconfigure(0, weight=1)
     header_frame.grid_columnconfigure(1, weight=1)
     header_frame.grid_columnconfigure(2, weight=1)
     header_frame.grid_columnconfigure(3, weight=2)
     header_frame.grid_columnconfigure(4, weight=1)
     header_frame.grid_columnconfigure(5, weight=1)
-grid_configure(header)
+my_grid_configure(header)
 
 # Body
 body = ctk.CTkScrollableFrame(master,
@@ -263,7 +263,6 @@ def home_page(frame):
         print("Please log in first")
 
 def settings_page(frame):
-    if not user.username == "":
         mn.clear_frame(frame)
         frame_configure(frame)
         button_gen(frame, udb.get_labels())
@@ -274,7 +273,6 @@ def settings_page(frame):
         master.title(f"{mn.app_title} - {mn.current_page}")
 
 def database_page(frame):
-    if not user.username == "":
         mn.clear_frame(frame)
         frame_configure(frame)
 
@@ -289,8 +287,8 @@ def database_page(frame):
                                        fg_color=mn.primary_grey,
                                        width=frame._current_width)
 
-        tabel = ts.show_table(minor_db_frame1, ntdb.sql_select_workers_data())
-        tabel = ts.show_table(minor_db_frame2, ntdb.sql_select_material_specifications_data())
+        ts.show_table(minor_db_frame1, ntdb.sql_select_workers_data())
+        ts.show_table(minor_db_frame2, ntdb.sql_select_material_specifications_data())
 
         
         minor_db_frame1.pack(padx = 3, pady=3, fill="both", expand=True)
@@ -306,87 +304,83 @@ def database_page(frame):
         master.title(f"{mn.app_title} - {mn.current_page}")
 
 def user_page(frame):
-    if not user.username == "":
-        mn.clear_frame(frame)
-        frame_configure(frame)
-        frame.configure(border_width=0)
+    mn.clear_frame(frame)
+    frame_configure(frame)
+    frame.configure(border_width=0)
 
-        first_frame = ctk.CTkFrame(frame,
+    first_frame = ctk.CTkFrame(frame,
                                    border_width=1,
                                    fg_color=mn.primary_grey)
-        first_frame.pack()
+    first_frame.pack()
         # Insert a new user for admins
-        if user.admin == True:
-            testframe = ctk.CTkFrame(first_frame,
+    if user.admin == True:
+        testframe = ctk.CTkFrame(first_frame,
                                      border_width=1,
                                      fg_color=mn.secondary_grey)
-            testframe.pack(fill="both")
-            label = ctk.CTkLabel(testframe,
+        testframe.pack(fill="both")
+        label = ctk.CTkLabel(testframe,
                                 text="Insert new user",
                                 font=("Arial", 18),
                                 fg_color=mn.secondary_grey)
-            label.pack(fill="both", padx=5, pady=5)
-            new_user_frame = ctk.CTkFrame(first_frame,
+        label.pack(fill="both", padx=5, pady=5)
+        new_user_frame = ctk.CTkFrame(first_frame,
                                           border_width=1,
                                           fg_color=mn.secondary_grey)
             
-            new_user_frame.pack(fill="both")
+        new_user_frame.pack(fill="both")
             
             
 
-            new_user_username_label = ctk.CTkLabel(new_user_frame,
+        new_user_username_label = ctk.CTkLabel(new_user_frame,
                                                    text="Username")
-            new_user_username_label.grid(row=0, column=0, sticky="w", padx=5, pady=5)
-            new_user_username_entry = ctk.CTkEntry(new_user_frame)
-            new_user_username_entry.grid(row=0, column=1, sticky="w", padx=5, pady=5)
-            new_user_password_label = ctk.CTkLabel(new_user_frame,
+        new_user_username_label.grid(row=0, column=0, sticky="w", padx=5, pady=5)
+        new_user_username_entry = ctk.CTkEntry(new_user_frame)
+        new_user_username_entry.grid(row=0, column=1, sticky="w", padx=5, pady=5)
+        new_user_password_label = ctk.CTkLabel(new_user_frame,
                                                    text="Password")
-            new_user_password_label.grid(row=1, column=0, sticky="w", padx=5, pady=5)
-            new_user_password_entry = ctk.CTkEntry(new_user_frame)
-            new_user_password_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
-            new_user_admin_label = ctk.CTkLabel(new_user_frame,
+        new_user_password_label.grid(row=1, column=0, sticky="w", padx=5, pady=5)
+        new_user_password_entry = ctk.CTkEntry(new_user_frame)
+        new_user_password_entry.grid(row=1, column=1, sticky="w", padx=5, pady=5)
+        new_user_admin_label = ctk.CTkLabel(new_user_frame,
                                                 text="Admin")
-            new_user_admin_label.grid(row=2, column=0, sticky="w", padx=5, pady=5)
-            new_user_admin_entry = ctk.CTkCheckBox(new_user_frame,
+        new_user_admin_label.grid(row=2, column=0, sticky="w", padx=5, pady=5)
+        new_user_admin_entry = ctk.CTkCheckBox(new_user_frame,
                                                    text="")
-            new_user_admin_entry.grid(row=2, column=1, sticky="w", padx=5, pady=5)
-            new_user_button = ctk.CTkButton(new_user_frame,
+        new_user_admin_entry.grid(row=2, column=1, sticky="w", padx=5, pady=5)
+        new_user_button = ctk.CTkButton(new_user_frame,
                                            text="Insert user",
                                            fg_color=mn.green_color,
                                            command=lambda: insert_user(first_frame, new_user_username_entry, new_user_password_entry, new_user_admin_entry))
-            new_user_button.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
+        new_user_button.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
 
-        second_frame = ctk.CTkFrame(frame,
+    second_frame = ctk.CTkFrame(frame,
                                        border_width=1,
                                        fg_color=mn.primary_grey)
-        second_frame.pack(fill="both")
+    second_frame.pack(fill="both", pady=10)
 
-        ts.show_table(second_frame, ldb.select_user_creation_logs())
+    ts.show_table(second_frame, ldb.select_user_creation_logs())
 
 
-        mn.current_page = "User"
-        master.title(f"{mn.app_title} - {mn.current_page}")
+    mn.current_page = "User"
+    master.title(f"{mn.app_title} - {mn.current_page}")
 
 def admin_settings_page(frame):
-    if not user.username == "":
-        mn.clear_frame(frame)
-        frame_configure(frame)
+    mn.clear_frame(frame)
+    frame_configure(frame)
 
-        button_gen(frame, udb.get_labels())
-        settings_frame = ctk.CTkFrame(frame,
-                                    border_width=1)
-        settings_frame.pack()
+    button_gen(frame, udb.get_labels())
+    settings_frame = ctk.CTkFrame(frame, border_width=1)
+    settings_frame.pack()
 
-        mn.current_page = "Admin Settings"
-        master.title(f"{mn.app_title} - {mn.current_page}")
+    mn.current_page = "Admin Settings"
+    master.title(f"{mn.app_title} - {mn.current_page}")
 
 def logs_page(frame):
-    if not user.username == "":
-        mn.clear_frame(frame)
-        frame_configure(frame)
+    mn.clear_frame(frame)
+    frame_configure(frame)
 
-        mn.current_page = "Logs"
-        master.title(f"{mn.app_title} - {mn.current_page}")
+    mn.current_page = "Logs"
+    master.title(f"{mn.app_title} - {mn.current_page}")
 
 # Run body functions
 login_page(main_frame)
@@ -400,10 +394,6 @@ footer.custom_name = "footer"
 footer.pack(side="bottom", fill="both")
 
 # Tkinter functions
-
-# Reset databases
-# ntdb.restart_tables_NextTech_db()
-# udb.restart_tables_UserCredentials_db()
 
 # Real functions
 def login(username, username_entry, password_entry):
@@ -455,6 +445,7 @@ def insert_user(frame, username, password, admin):
         username.delete(0, "end")
         password.delete(0, "end")
         username.configure(border_color=mn.secondary_grey)
+        user_page(main_frame)
 
     except NameError as e:
         testlabel.configure(text=f"User already exists")

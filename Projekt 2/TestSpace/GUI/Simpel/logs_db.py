@@ -30,9 +30,7 @@ def insert_user_creation_logs(user, new_user):
     
     cur.execute(f"SELECT creation_id FROM user_creation WHERE user_created = '{new_user}'")
     action_id = cur.fetchone()[0]
-
-    print(user)
-    print(action_id)
+    
     cur.execute(f"INSERT INTO logs (user, action_type, creation_id) VALUES ('{user}', 'User creation', {action_id})")
     con.commit()
 
@@ -50,10 +48,12 @@ def drop_user_creation_id():
 # Select data
 def select_user_creation_logs():
     try:
-        found = pd.read_sql_query('''SELECT logs.timestamp, logs.user, user_creation.user_created
-                                  FROM logs
-                                  INNER JOIN user_creation ON logs.creation_id = user_creation.creation_id
-''', con)
+        found = pd.read_sql_query('''
+            SELECT logs.timestamp, logs.user, user_creation.user_created
+            FROM logs
+            INNER JOIN user_creation ON logs.creation_id = user_creation.creation_id
+            ORDER BY logs.timestamp DESC
+        ''', con)
         # print(found)
         return found
     except Exception as e:
