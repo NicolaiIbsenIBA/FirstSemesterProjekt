@@ -462,10 +462,10 @@ def frame_configure(frame):
 # Big reset
 def restart_dbs():
     ntdb.restart_tables_NextTech_db()
-    udb.restart_tables_UserCredentials_db()
+    udb.restart_tables_users_db()
     ldb.restart_logs()
 
-# restart_dbs()
+restart_dbs()
 
 # Run main loop
 master.mainloop()

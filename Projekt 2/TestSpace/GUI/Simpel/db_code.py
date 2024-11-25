@@ -5,13 +5,13 @@ import classes as cl
 con = sql.connect(f'Simpel/UserCredentials.db')
 
 # Data collections
-test_user = cl.Credentials("admin", "admin", True)
+test_user = cl.Credentials("ADMIN", "ADMIN", True)
 
 # Queries
 # Select queries
 # Check if user exists
 def check_login(username, password):
-    query = f"""SELECT username, admin FROM UserCredential WHERE username = '{username}' AND password = '{password}'"""
+    query = f"""SELECT USERNAME, ADMIN FROM USER_CREDENTIAL WHERE USERNAME = '{username}' AND PASSWORD = '{password}'"""
     df = pd.read_sql_query(query, con)
     if df.empty:
         return False
@@ -19,26 +19,26 @@ def check_login(username, password):
         return True
 
 def get_labels():    
-    query = f"""SELECT label FROM Label"""
+    query = f"""SELECT LABEL FROM LABEL"""
     df = pd.read_sql_query(query, con)
-    return df['label'].tolist()
+    return df['LABEL'].tolist()
 
 # Insert queries
 def insert_user(new_user):
     try:
-        con.execute(f"""INSERT INTO UserCredential (username, password, admin) VALUES 
-                    ('{new_user.username}', '{new_user.password}', {new_user.admin})""")
+        con.execute(f"""INSERT INTO USER_CREDENTIAL (USERNAME, PASSWORD, ADMIN) VALUES 
+                    ('{new_user.USERNAME}', '{new_user.PASSWORD}', {new_user.ADMIN})""")
         con.commit()
-        print(f"user {new_user.username} inserted")
+        print(f"user {new_user.USERNAME} inserted")
     except Exception as e:
         print(e)
         con.rollback()
 
 def insert_label(label):
     try:
-        con.execute(f"""INSERT INTO Label (label) VALUES ('{label}')""")
+        con.execute(f"""INSERT INTO LABEL (LABEL) VALUES ('{label}')""")
         con.commit()
-        print(f"label {label} inserted")
+        print(f"LABEL {label} inserted")
     except Exception as e:
         print(e)
         con.rollback()
@@ -47,10 +47,10 @@ def insert_label(label):
 # Create queries
 def create_user_table():
     try:
-        con.execute("""CREATE TABLE IF NOT EXISTS UserCredential (
-                    username TEXT PRIMARY KEY, 
-                    password TEXT, 
-                    admin BOOLEAN)""")
+        con.execute("""CREATE TABLE IF NOT EXISTS USER_CREDENTIAL (
+                    USERNAME TEXT PRIMARY KEY, 
+                    PASSWORD TEXT, 
+                    ADMIN BOOLEAN)""")
         con.commit()
         print(f"user_table created")
     except Exception as e:
@@ -59,11 +59,11 @@ def create_user_table():
 
 def create_label_table():
     try:
-        con.execute("""CREATE TABLE IF NOT EXISTS Label (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                    label TEXT)""")
+        con.execute("""CREATE TABLE IF NOT EXISTS LABEL (
+                    ID INTEGER PRIMARY KEY AUTOINCREMENT, 
+                    LABEL TEXT)""")
         con.commit()
-        print(f"label_table created")
+        print(f"LABEL_table created")
     except Exception as e:
         print(e)
         con.rollback()
@@ -71,7 +71,7 @@ def create_label_table():
 # Drop queries
 def drop_user_table():
     try:
-        con.execute("""DROP TABLE IF EXISTS UserCredential""")
+        con.execute("""DROP TABLE IF EXISTS USER_CREDENTIAL""")
         con.commit()
         print(f"user_table dropped")
     except Exception as e:
@@ -80,14 +80,14 @@ def drop_user_table():
 
 def drop_label_table():
     try:
-        con.execute("""DROP TABLE IF EXISTS Label""")
+        con.execute("""DROP TABLE IF EXISTS LABEL""")
         con.commit()
-        print(f"label_table dropped")
+        print(f"LABEL_table dropped")
     except Exception as e:
         print(e)
         con.rollback()
 
-drop_label_table()
+"""drop_label_table()
 create_label_table()
 for i in range(10):
-    insert_label(f"{i}")
+    insert_label(f"{i}")"""
