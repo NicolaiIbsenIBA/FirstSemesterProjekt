@@ -57,15 +57,16 @@ def show_table(frame, data):
 
     def on_double_click(event):
         item = table.selection()
+        print(columns)
         if not item:
             return  # Ignore double-clicks on column headers
         item = item[0]
         column = table.identify_column(event.x)
         row = table.identify_row(event.y)
         col_index = int(column.replace('#', '')) - 1
-        if columns == ['Process', 'Job title', 'Salary'] and col_index == 2:
+        if columns == mn.workers_columns and col_index == 2:
             create_entry_widget(item, column, col_index)
-        elif columns == ['Material id', 'Machine', 'Process', 'Cost', 'Unit', 'Density'] and col_index == 3:
+        elif columns == mn.material_columns and col_index == 4:
             create_entry_widget(item, column, col_index)
 
 def sort_treeview(tree, col, reverse):
@@ -107,7 +108,7 @@ def changes_made(database, tabel):
                 except ValueError:
                     # If both conversions fail, leave the value as is
                     pass
-
+    
     database_set = set(map(tuple, database_list))
     tabel_set = set(map(tuple, tabel_list))
     
@@ -115,20 +116,21 @@ def changes_made(database, tabel):
         print("No changes made")
     else:
         print("Changes made")
-        if database.columns.str.upper().tolist() == mn.workers_columns:
-            ntdb.sql_update(query_changes_made_workers(list(tabel_set.difference(database_set))))
-        elif database.columns.str.upper().tolist() == mn.material_columns:
-            ntdb.sql_update(query_changes_material_specifications(list(tabel_set.difference(database_set))))
+        if database.columns.str.capitalize().tolist() == mn.workers_columns:
+            print(tabel_set.difference(database_set))
+            ntdb.sql_update_from_list(query_changes_made_workers(list(tabel_set.difference(database_set))))
+        elif database.columns.str.capitalize().tolist() == mn.material_columns:
+            ntdb.sql_update_from_list(query_changes_material_specifications(list(tabel_set.difference(database_set))))
 
 def query_changes_made_workers(changes):
     query_list = []
     for i in changes:
-        query_list.append(f"UPDATE WORKERS SET SALARY = {i[2]} WHERE PROCESS = '{i[0]}' AND JOB_TITLE = '{i[1]}'")
+        query_list.append(f"UPDATE workers SET SALARY = {i[2]} WHERE process = '{i[0]}' AND jobTitle = '{i[1]}'")
     return query_list
 
 def query_changes_material_specifications(changes):
     query_list = []
     for i in changes:
-        query_list.append(f"UPDATE MATERIAL_SPECIFICATIONS SET COST = {i[3]} WHERE MATERIAL_ID = '{i[0]}'")
+        query_list.append(f"UPDATE materialSpecifications SET cost = {i[4]} WHERE materialId = '{i[0]}'")
     return query_list
     

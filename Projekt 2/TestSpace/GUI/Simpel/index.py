@@ -218,6 +218,13 @@ def home_page(frame):
                                      command=lambda: database_page(frame))
         btn_list.append(database_btn)
 
+        beregn_btn = ctk.CTkButton(frame,
+                                   text="Beregn",
+                                   height=100,
+                                   fg_color=mn.secondary_grey,
+                                   command=lambda: beregn_page(frame))
+        btn_list.append(beregn_btn)
+
         settings_btn = ctk.CTkButton(frame,
                                      text="Settings",
                                      height=100,
@@ -362,6 +369,127 @@ def user_page(frame):
 
 
     mn.current_page = "User"
+    master.title(f"{mn.app_title} - {mn.current_page}")
+
+
+def beregn_page(frame):
+    mn.clear_frame(frame)
+    frame_configure(frame)
+
+    material_specs = ntdb.sql_select_material_specifications_data()
+
+
+    beregn_frame = ctk.CTkFrame(frame,
+                            border_width=1,
+                            width=400,
+                            height=400)
+    beregn_frame.pack(fill="both", expand=True)
+
+    printtype_label = ctk.CTkLabel(beregn_frame,
+                                text="Print type")
+    printtype_label.grid(row=0, column=0, padx=5, pady=5)
+    
+    printtype_combo = ttk.Combobox(beregn_frame,
+                                   values=[i for i in material_specs["printType"].unique()],
+                                    width=20,
+                                    state="readonly")
+    printtype_combo.grid(row=0, column=1, padx=5, pady=5)
+    
+    def printtype_callback(*args):
+        # Empty dataframe
+        df = pd.DataFrame()
+
+        # Get the process by the selected printtype
+        df = ntdb.sql_select_process_by_printtype(printtype_combo.get())
+        process_combo["values"] = [i for i in df["process"].unique()]
+        process_combo.current(0)
+
+        # Get the machine by the selected process
+        df = pd.DataFrame()
+        df = ntdb.sql_select_machine_by_process(process_combo.get())
+        machine_combo["values"] = [i for i in df["machine"].unique()]
+        machine_combo.current(0)
+
+        # Get the material by the selected machine
+        df = ntdb.sql_select_material_by_machine(machine_combo.get())
+        material_combo["values"] = [i for i in df["materialId"].unique()]
+        material_combo.current(0)
+
+    printtype_combo.bind("<<ComboboxSelected>>", printtype_callback)
+
+    process_label = ctk.CTkLabel(beregn_frame,
+                                text="Process")
+    process_label.grid(row=1, column=0, padx=5, pady=5)
+
+    process_combo = ttk.Combobox(beregn_frame,
+                                values=[i for i in material_specs["process"].unique()],
+                                width=20,
+                                state="readonly")
+    process_combo.grid(row=1, column=1, padx=5, pady=5)
+    
+    def process_callback(*args):
+        # Empty dataframe
+        df = pd.DataFrame()
+
+        # Get the machine by the selected process
+        df = ntdb.sql_select_machine_by_process(process_combo.get())
+        machine_combo["values"] = [i for i in df["machine"].unique()]
+        machine_combo.current(0)
+
+        # Get the material by the selected machine
+        df = ntdb.sql_select_material_by_machine(machine_combo.get())
+        material_combo["values"] = [i for i in df["materialId"].unique()]
+        material_combo.current(0)
+    
+    process_combo.bind("<<ComboboxSelected>>", process_callback)
+
+    machine_label = ctk.CTkLabel(beregn_frame,
+                                text="Machine")
+    machine_label.grid(row=2, column=0, padx=5, pady=5)
+
+    machine_combo = ttk.Combobox(beregn_frame,
+                                values=[i for i in material_specs["machine"].unique()],
+                                width=20,
+                                state="readonly")
+    machine_combo.grid(row=2, column=1, padx=5, pady=5)
+    
+    def machine_callback(*args):
+        # Empty dataframe
+        df = pd.DataFrame()
+
+        # Get the material by the selected machine
+        df = ntdb.sql_select_material_by_machine(machine_combo.get())
+        material_combo["values"] = [i for i in df["materialId"].unique()]
+        material_combo.current(0)
+
+    machine_combo.bind("<<ComboboxSelected>>", machine_callback)
+
+    material_label = ctk.CTkLabel(beregn_frame,
+                                text="Material")
+    material_label.grid(row=3, column=0, padx=5, pady=5)
+
+    material_combo = ttk.Combobox(beregn_frame,
+                                values=[i for i in material_specs["materialId"].unique()],
+                                width=20,
+                                state="readonly")
+    material_combo.grid(row=3, column=1, padx=5, pady=5)
+
+    weight_label = ctk.CTkLabel(beregn_frame,
+                                text="Weight")
+    weight_label.grid(row=4, column=0, padx=5, pady=5)
+
+    weight_entry = ctk.CTkEntry(beregn_frame,
+                                border_width=1,
+                                border_color=mn.black)
+    weight_entry.grid(row=4, column=1, padx=5, pady=5)
+
+    calculate_button = ctk.CTkButton(beregn_frame,
+                                    text="Calculate",
+                                    fg_color=mn.green_color,
+                                    command=lambda: print("Calculating"))
+    calculate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+
+    mn.current_page = "Beregn"
     master.title(f"{mn.app_title} - {mn.current_page}")
 
 def admin_settings_page(frame):

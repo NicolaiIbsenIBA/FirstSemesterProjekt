@@ -23,6 +23,8 @@ def get_labels():
     df = pd.read_sql_query(query, con)
     return df['LABEL'].tolist()
 
+#
+
 # Insert queries
 def insert_user(new_user):
     try:
@@ -86,8 +88,3 @@ def drop_label_table():
     except Exception as e:
         print(e)
         con.rollback()
-
-"""drop_label_table()
-create_label_table()
-for i in range(10):
-    insert_label(f"{i}")"""

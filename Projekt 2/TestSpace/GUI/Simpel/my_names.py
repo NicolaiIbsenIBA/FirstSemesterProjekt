@@ -6,11 +6,11 @@ labelgen = pd.DataFrame ({
 })
 
 # Database name and tables names
-name_of_database = 'NEXTTECH_3D_PRINTING'
-material_specifications_table = 'MACHINE'
-material_columns = ['MATERIAL_ID', 'MACHINE', 'PROCESS', 'COST', 'UNIT', 'DENSITY']
-workers_table = 'WORKERS'
-workers_columns = ['PROCESS', 'JOB_TITLE', 'SALARY']
+name_of_database = 'nextTech.db'
+material_specifications_table = 'materialSpecifications'
+material_columns = ['Materialid', 'Printtype', 'Machine', 'Process', 'Cost', 'Unit', 'Density']
+workers_table = 'workers'
+workers_columns = ['Process', 'Jobtitle', 'Salary']
 
 # Name of app
 app_title = "NextTech CALC"
