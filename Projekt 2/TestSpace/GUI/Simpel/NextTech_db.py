@@ -9,8 +9,8 @@ material_specifications_data = pd.DataFrame({
     'printType': ['Trådprint', 'Trådprint', 'Resinprint', 'Resinprint', 'Resinprint', 'Resinprint', 'Laser', 'Laser', 'Laser', 'Laser', 'Laser', 'Resinprint'],
     'machine': ['Ultimaker 3', 'Fortus 360mc', 'Form2', 'Form2', 'ProX 950', 'Form2', 'EOSINT P800', 'EOSINT P800', 'EOSINT P800', 'EOSm100 or 400-4', 'EOSm100 or 400-4', '3D Systems Figure 4'],
     'process': ['FFF', 'FDM', 'SLA', 'SLA', 'SLA', 'SLA', 'SLS', 'SLS', 'SLS', 'SLM', 'SLM', 'DLP'],
-    'cost': [66.66, 343, 149, 149, 2800, 299, 67.5, 60, 50, 400, 30, 250],
-    'unit': ['$/kg', 'unit', '$/L', '$/L', '$/10kg', '$/L', '$/kg', '$/kg', '$/kg', '$/kg', '$/kg', '$/kg'],
+    'cost': [66.66, 343, 149, 149, 280, 299, 67.5, 60, 50, 400, 30, 250],
+    'unit': ['$/kg', '$/kg', '$/L', '$/L', '$/kg', '$/L', '$/kg', '$/kg', '$/kg', '$/kg', '$/kg', '$/kg'],
     'density': [1.1, 1.27, 1.18, 1.18, 1.18, 1.18, 0.93, 1.01, 1.36, 4.43, 8, 1.07]
 })
 
@@ -56,6 +56,12 @@ def sql_select_everything_by_machine(machine):
 def sql_select_material_by_machine(machine):
     try:
         return pd.read_sql_query(f"SELECT materialId FROM materialSpecifications WHERE machine = '{machine}'", con)
+    except Exception as e:
+        print(e)
+
+def sql_select_material_from_query(query):
+    try:
+        return pd.read_sql_query(query, con)
     except Exception as e:
         print(e)
 

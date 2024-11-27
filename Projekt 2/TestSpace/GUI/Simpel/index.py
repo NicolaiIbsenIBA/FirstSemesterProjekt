@@ -371,7 +371,6 @@ def user_page(frame):
     mn.current_page = "User"
     master.title(f"{mn.app_title} - {mn.current_page}")
 
-
 def beregn_page(frame):
     mn.clear_frame(frame)
     frame_configure(frame)
@@ -382,7 +381,8 @@ def beregn_page(frame):
     beregn_frame = ctk.CTkFrame(frame,
                             border_width=1,
                             width=400,
-                            height=400)
+                            height=400,
+                            fg_color=mn.secondary_grey)
     beregn_frame.pack(fill="both", expand=True)
 
     printtype_label = ctk.CTkLabel(beregn_frame,
@@ -398,6 +398,8 @@ def beregn_page(frame):
     def printtype_callback(*args):
         # Empty dataframe
         df = pd.DataFrame()
+        
+        calculate_button.configure(fg_color=mn.green_color)
 
         # Get the process by the selected printtype
         df = ntdb.sql_select_process_by_printtype(printtype_combo.get())
@@ -430,6 +432,8 @@ def beregn_page(frame):
     def process_callback(*args):
         # Empty dataframe
         df = pd.DataFrame()
+        
+        calculate_button.configure(fg_color=mn.green_color)
 
         # Get the machine by the selected process
         df = ntdb.sql_select_machine_by_process(process_combo.get())
@@ -444,7 +448,7 @@ def beregn_page(frame):
     process_combo.bind("<<ComboboxSelected>>", process_callback)
 
     machine_label = ctk.CTkLabel(beregn_frame,
-                                text="Machine")
+                                text="Machine *")
     machine_label.grid(row=2, column=0, padx=5, pady=5)
 
     machine_combo = ttk.Combobox(beregn_frame,
@@ -456,6 +460,8 @@ def beregn_page(frame):
     def machine_callback(*args):
         # Empty dataframe
         df = pd.DataFrame()
+
+        calculate_button.configure(fg_color=mn.green_color)
 
         # Get the material by the selected machine
         df = ntdb.sql_select_material_by_machine(machine_combo.get())
@@ -469,25 +475,79 @@ def beregn_page(frame):
     material_label.grid(row=3, column=0, padx=5, pady=5)
 
     material_combo = ttk.Combobox(beregn_frame,
-                                values=[i for i in material_specs["materialId"].unique()],
                                 width=20,
-                                state="readonly")
+                                state="readonly",
+                                values=["Select a machine"])
     material_combo.grid(row=3, column=1, padx=5, pady=5)
 
-    weight_label = ctk.CTkLabel(beregn_frame,
-                                text="Weight")
-    weight_label.grid(row=4, column=0, padx=5, pady=5)
+    # Mass or volume
+    mass_volume_label = ctk.CTkLabel(beregn_frame,
+                                    text="Mass or volume")
+    mass_volume_label.grid(row=4, column=0, padx=5, pady=5)
 
-    weight_entry = ctk.CTkEntry(beregn_frame,
-                                border_width=1,
-                                border_color=mn.black)
-    weight_entry.grid(row=4, column=1, padx=5, pady=5)
+    mass_volume_combo = ttk.Combobox(beregn_frame,
+                                    values=["Mass", "Volume"],
+                                    width=20,
+                                    state="readonly")
+    mass_volume_combo.current(0)
+    mass_volume_combo.grid(row=4, column=1, padx=5, pady=5)
+
+    def mass_volume_callback(*args):
+        if mass_volume_combo.get() == "Mass":
+            mass_volume_amount_unit_label.configure(text="kg")
+        else:
+            mass_volume_amount_unit_label.configure(text="L")
+    
+    mass_volume_combo.bind("<<ComboboxSelected>>", mass_volume_callback)
+
+    mass_volume_amount_label = ctk.CTkLabel(beregn_frame,
+                                            text="Material amount")
+    mass_volume_amount_label.grid(row=5, column=0, padx=5, pady=5)
+
+    mass_volume_amount_entry = ctk.CTkEntry(beregn_frame)
+    mass_volume_amount_entry.grid(row=5, column=1, padx=5, pady=5)
+
+    mass_volume_amount_unit_label = ctk.CTkLabel(beregn_frame,
+                                                 text="kg")
+    mass_volume_amount_unit_label.grid(row=5, column=2, padx=5, pady=5)
 
     calculate_button = ctk.CTkButton(beregn_frame,
                                     text="Calculate",
-                                    fg_color=mn.green_color,
-                                    command=lambda: print("Calculating"))
-    calculate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+                                    fg_color=mn.secondary_grey,
+                                    command=lambda: btn_calculate(),
+                                    border_width=1)
+    calculate_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+
+    def btn_calculate():
+        try :
+            if mass_volume_amount_entry.get().replace(",", ".") == "":
+                raise ValueError("Please enter a value")
+            if float(mass_volume_amount_entry.get().replace(",", ".")) <= 0:
+                raise ValueError("Please enter a positive number")
+        except ValueError as e:
+            calc_error_label.configure(text=e)
+            mass_volume_amount_entry.configure(border_color="red", border_width=1)
+            return
+        mass_volume_amount_entry.configure(border_color="grey", border_width=0)
+        # If mass or volume is selected in the mass_volume_combobox
+        if mass_volume_combo.get() == "Mass":
+            print_cost = dh.get_print_cost_from_mass(machine_combo.get(), material_combo.get(), "kg", mass_volume_amount_entry.get().replace(",", "."))
+            calc_error_label.configure(text=f"Material cost: {print_cost:.2f} $")
+        elif mass_volume_combo.get() == "Volume":
+            print_cost = dh.get_print_cost_from_volume(machine_combo.get(), material_combo.get(), "L", mass_volume_amount_entry.get().replace(",", "."))
+            calc_error_label.configure(text=f"Material cost: {print_cost:.2f} $")
+
+
+    calc_error_label = ctk.CTkLabel(beregn_frame, text="")
+    calc_error_label.grid(row=7, column=0, columnspan=2, padx=5, pady=5)
+
+    reset_calc_button = ctk.CTkButton(beregn_frame,
+                                    text="Reset",
+                                    command=lambda: reset_calculate())
+    reset_calc_button.grid(row=8, column=0, columnspan=2, padx=5, pady=5)
+
+    def reset_calculate():
+        beregn_page(frame)
 
     mn.current_page = "Beregn"
     master.title(f"{mn.app_title} - {mn.current_page}")
@@ -593,7 +653,7 @@ def restart_dbs():
     udb.restart_tables_users_db()
     ldb.restart_logs()
 
-restart_dbs()
+# restart_dbs()
 
 # Run main loop
 master.mainloop()
