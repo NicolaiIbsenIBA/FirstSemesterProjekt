@@ -139,7 +139,6 @@ def sql_update_material_specifications_data(df):
 def sql_update_from_list(query):
     try:
         for i in query:
-            print(i)
             con.execute(i)
             con.commit()
     except Exception as e:

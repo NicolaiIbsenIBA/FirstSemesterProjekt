@@ -57,7 +57,6 @@ def show_table(frame, data):
 
     def on_double_click(event):
         item = table.selection()
-        print(columns)
         if not item:
             return  # Ignore double-clicks on column headers
         item = item[0]
@@ -117,7 +116,6 @@ def changes_made(database, tabel):
     else:
         print("Changes made")
         if database.columns.str.capitalize().tolist() == mn.workers_columns:
-            print(tabel_set.difference(database_set))
             ntdb.sql_update_from_list(query_changes_made_workers(list(tabel_set.difference(database_set))))
         elif database.columns.str.capitalize().tolist() == mn.material_columns:
             ntdb.sql_update_from_list(query_changes_material_specifications(list(tabel_set.difference(database_set))))

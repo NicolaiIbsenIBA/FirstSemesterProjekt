@@ -27,6 +27,7 @@ blue_color = "#009fe3"
 green_color = "#6da924"
 primary_grey = "#d9d9d9"
 secondary_grey = "#565b5e"
+background_grey  = "#d9d9d9"
 black = "#000000"
 
 # Global variables

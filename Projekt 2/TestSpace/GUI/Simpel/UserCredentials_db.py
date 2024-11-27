@@ -45,7 +45,6 @@ def insert_label(labellist):
         query = "INSERT INTO label (label) VALUES (?)"
         con.executemany(query, [(label,) for label in labellist])
         con.commit()
-        print(f"Labels {labellist} inserted")
     except Exception as e:
         print(e)
         con.rollback()
@@ -59,7 +58,6 @@ def create_user_table():
                     password TEXT, 
                     admin BOOLEAN)""")
         con.commit()
-        print(f"userCredential table created")
     except Exception as e:
         print(e)
         con.rollback()
@@ -70,7 +68,6 @@ def create_label_table():
                     id INTEGER PRIMARY KEY AUTOINCREMENT, 
                     label TEXT)""")
         con.commit()
-        print(f"label table created")
     except Exception as e:
         print(e)
         con.rollback()
@@ -80,7 +77,6 @@ def drop_user_table():
     try:
         con.execute("""DROP TABLE IF EXISTS userCredential""")
         con.commit()
-        print(f"userCredential table dropped")
     except Exception as e:
         print(e)
         con.rollback()
@@ -89,7 +85,6 @@ def drop_label_table():
     try:
         con.execute("""DROP TABLE IF EXISTS label""")
         con.commit()
-        print(f"label table dropped")
     except Exception as e:
         print(e)
         con.rollback()
@@ -98,9 +93,7 @@ def drop_label_table():
 def restart_user_table():
     drop_user_table()
     create_user_table()
-    print("")
     insert_user("admin", "admin", True)
-    print("")
 
 def restart_label_table():
     drop_label_table()

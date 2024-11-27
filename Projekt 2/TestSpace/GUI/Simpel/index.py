@@ -152,7 +152,7 @@ main_frame = ctk.CTkFrame(body,
                           bg_color=mn.primary_grey,
                           width=500,)
 main_frame.custom_name = "main"
-main_frame.pack(padx=3, pady=3)
+main_frame.pack(padx=3, pady=3, fill="both", expand="true")
 
 # Body functions
 def login_page(frame):
@@ -183,7 +183,7 @@ def login_page(frame):
                                  command=lambda: login(username_entry.get(), username_entry, password_entry))
     login_button.grid(row=2, column=0, columnspan=2, sticky="ew", padx=3, pady=3)
 
-    frame.after(50, lambda: username_entry.focus())
+    frame.after(150, lambda: username_entry.focus())
     username_entry.bind('<Return>', lambda event: password_entry.focus())
     password_entry.bind('<Return>', lambda event: login(username_entry.get(), username_entry, password_entry))
 
@@ -202,37 +202,40 @@ def home_page(frame):
         mn.clear_frame(frame)
         frame_configure(frame)
 
+        home_frame = ctk.CTkFrame(frame, fg_color=mn.background_grey)
+        home_frame.pack()
+
         btn_list = []
 
-        user_btn = ctk.CTkButton(frame,
+        user_btn = ctk.CTkButton(home_frame,
                                  text="User",
                                  height=100,
                                  fg_color=mn.secondary_grey,
                                  command=lambda: user_page(frame))
         btn_list.append(user_btn)
 
-        database_btn = ctk.CTkButton(frame,
+        database_btn = ctk.CTkButton(home_frame,
                                      text="Database",
                                      height=100,
                                      fg_color=mn.secondary_grey,
                                      command=lambda: database_page(frame))
         btn_list.append(database_btn)
 
-        beregn_btn = ctk.CTkButton(frame,
+        beregn_btn = ctk.CTkButton(home_frame,
                                    text="Beregn",
                                    height=100,
                                    fg_color=mn.secondary_grey,
                                    command=lambda: beregn_page(frame))
         btn_list.append(beregn_btn)
 
-        settings_btn = ctk.CTkButton(frame,
+        settings_btn = ctk.CTkButton(home_frame,
                                      text="Settings",
                                      height=100,
                                      fg_color=mn.secondary_grey,
                                      command=lambda: settings_page(frame))
         btn_list.append(settings_btn)
 
-        logs_btn = ctk.CTkButton(frame,
+        logs_btn = ctk.CTkButton(home_frame,
                                     text="Logs",
                                     height=100,
                                     fg_color=mn.secondary_grey,
@@ -240,14 +243,14 @@ def home_page(frame):
         btn_list.append(logs_btn)
 
         if user.admin == True:
-            admin_btn1 = ctk.CTkButton(frame,
+            admin_btn1 = ctk.CTkButton(home_frame,
                                       text="Admin settings",
                                       height=100,
                                       fg_color=mn.green_color,
                                       command=lambda: admin_settings_page(frame))
             btn_list.append(admin_btn1)
 
-            admin_btn2 = ctk.CTkButton(frame,
+            admin_btn2 = ctk.CTkButton(home_frame,
                                       text="Admin2",
                             height=100,
                                       fg_color=mn.green_color)
@@ -375,21 +378,41 @@ def beregn_page(frame):
     mn.clear_frame(frame)
     frame_configure(frame)
 
+    # Get data for the comboboxes/selections
     material_specs = ntdb.sql_select_material_specifications_data()
 
+    input_header_frame = ctk.CTkFrame(frame, fg_color=mn.secondary_grey)
+    input_header_frame.pack(padx=1, pady=1)
 
-    beregn_frame = ctk.CTkFrame(frame,
-                            border_width=1,
-                            width=400,
-                            height=400,
-                            fg_color=mn.secondary_grey)
-    beregn_frame.pack(fill="both", expand=True)
+    # Create base frame for page
+    beregn_frame = ctk.CTkFrame(frame, fg_color=mn.secondary_grey)
+    beregn_frame.pack(padx=1, pady=1)
+    # Create input frame for calculation
+    input_frame = ctk.CTkFrame(beregn_frame, fg_color=mn.secondary_grey)
+    input_frame.pack(padx=2, pady=2)
 
-    printtype_label = ctk.CTkLabel(beregn_frame,
+    # Create a footer frame for calculation
+    output_frame = ctk.CTkFrame(beregn_frame, fg_color=mn.secondary_grey)
+    output_frame.pack(padx=1, pady=1)
+
+    ### Header for input frame
+    header_label = ctk.CTkLabel(input_header_frame,
+                                text="Calculate material cost",
+                                font=("Arial", 18),
+                                fg_color=mn.secondary_grey,
+                                bg_color=mn.secondary_grey,
+                                width=275,
+                                corner_radius=5)
+    header_label.pack(pady=5)
+
+
+    
+    ### GUI for input frame
+    printtype_label = ctk.CTkLabel(input_frame,
                                 text="Print type")
     printtype_label.grid(row=0, column=0, padx=5, pady=5)
     
-    printtype_combo = ttk.Combobox(beregn_frame,
+    printtype_combo = ttk.Combobox(input_frame,
                                    values=[i for i in material_specs["printType"].unique()],
                                     width=20,
                                     state="readonly")
@@ -407,7 +430,6 @@ def beregn_page(frame):
         process_combo.current(0)
 
         # Get the machine by the selected process
-        df = pd.DataFrame()
         df = ntdb.sql_select_machine_by_process(process_combo.get())
         machine_combo["values"] = [i for i in df["machine"].unique()]
         machine_combo.current(0)
@@ -419,11 +441,11 @@ def beregn_page(frame):
 
     printtype_combo.bind("<<ComboboxSelected>>", printtype_callback)
 
-    process_label = ctk.CTkLabel(beregn_frame,
+    process_label = ctk.CTkLabel(input_frame,
                                 text="Process")
     process_label.grid(row=1, column=0, padx=5, pady=5)
 
-    process_combo = ttk.Combobox(beregn_frame,
+    process_combo = ttk.Combobox(input_frame,
                                 values=[i for i in material_specs["process"].unique()],
                                 width=20,
                                 state="readonly")
@@ -447,11 +469,11 @@ def beregn_page(frame):
     
     process_combo.bind("<<ComboboxSelected>>", process_callback)
 
-    machine_label = ctk.CTkLabel(beregn_frame,
+    machine_label = ctk.CTkLabel(input_frame,
                                 text="Machine *")
     machine_label.grid(row=2, column=0, padx=5, pady=5)
 
-    machine_combo = ttk.Combobox(beregn_frame,
+    machine_combo = ttk.Combobox(input_frame,
                                 values=[i for i in material_specs["machine"].unique()],
                                 width=20,
                                 state="readonly")
@@ -470,22 +492,22 @@ def beregn_page(frame):
 
     machine_combo.bind("<<ComboboxSelected>>", machine_callback)
 
-    material_label = ctk.CTkLabel(beregn_frame,
+    material_label = ctk.CTkLabel(input_frame,
                                 text="Material")
     material_label.grid(row=3, column=0, padx=5, pady=5)
 
-    material_combo = ttk.Combobox(beregn_frame,
+    material_combo = ttk.Combobox(input_frame,
                                 width=20,
                                 state="readonly",
                                 values=["Select a machine"])
     material_combo.grid(row=3, column=1, padx=5, pady=5)
 
     # Mass or volume
-    mass_volume_label = ctk.CTkLabel(beregn_frame,
+    mass_volume_label = ctk.CTkLabel(input_frame,
                                     text="Mass or volume")
     mass_volume_label.grid(row=4, column=0, padx=5, pady=5)
 
-    mass_volume_combo = ttk.Combobox(beregn_frame,
+    mass_volume_combo = ttk.Combobox(input_frame,
                                     values=["Mass", "Volume"],
                                     width=20,
                                     state="readonly")
@@ -500,18 +522,19 @@ def beregn_page(frame):
     
     mass_volume_combo.bind("<<ComboboxSelected>>", mass_volume_callback)
 
-    mass_volume_amount_label = ctk.CTkLabel(beregn_frame,
+    mass_volume_amount_label = ctk.CTkLabel(input_frame,
                                             text="Material amount")
     mass_volume_amount_label.grid(row=5, column=0, padx=5, pady=5)
 
-    mass_volume_amount_entry = ctk.CTkEntry(beregn_frame)
-    mass_volume_amount_entry.grid(row=5, column=1, padx=5, pady=5)
+    mass_volume_amount_entry = ctk.CTkEntry(input_frame, width=125, height=20)
+    mass_volume_amount_entry.grid(row=5, column=1)
 
-    mass_volume_amount_unit_label = ctk.CTkLabel(beregn_frame,
-                                                 text="kg")
+    mass_volume_amount_unit_label = ctk.CTkLabel(input_frame,
+                                                 text="kg",
+                                                 width=20)
     mass_volume_amount_unit_label.grid(row=5, column=2, padx=5, pady=5)
 
-    calculate_button = ctk.CTkButton(beregn_frame,
+    calculate_button = ctk.CTkButton(output_frame,
                                     text="Calculate",
                                     fg_color=mn.secondary_grey,
                                     command=lambda: btn_calculate(),
@@ -538,10 +561,10 @@ def beregn_page(frame):
             calc_error_label.configure(text=f"Material cost: {print_cost:.2f} $")
 
 
-    calc_error_label = ctk.CTkLabel(beregn_frame, text="")
+    calc_error_label = ctk.CTkLabel(output_frame, text="")
     calc_error_label.grid(row=7, column=0, columnspan=2, padx=5, pady=5)
 
-    reset_calc_button = ctk.CTkButton(beregn_frame,
+    reset_calc_button = ctk.CTkButton(output_frame,
                                     text="Reset",
                                     command=lambda: reset_calculate())
     reset_calc_button.grid(row=8, column=0, columnspan=2, padx=5, pady=5)
@@ -644,8 +667,9 @@ def insert_user(frame, username, password, admin):
         print(e)
 
 def frame_configure(frame):
-    frame.configure(border_width=1,
-                    width=400)
+    frame.configure(border_width=0,
+                    width=400,
+                    fg_color="#d9d9d9",)
 
 # Big reset
 def restart_dbs():
@@ -653,7 +677,7 @@ def restart_dbs():
     udb.restart_tables_users_db()
     ldb.restart_logs()
 
-# restart_dbs()
+restart_dbs()
 
 # Run main loop
 master.mainloop()
