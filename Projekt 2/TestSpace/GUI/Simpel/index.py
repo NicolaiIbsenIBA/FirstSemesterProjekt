@@ -382,18 +382,18 @@ def beregn_page(frame):
     material_specs = ntdb.sql_select_material_specifications_data()
 
     input_header_frame = ctk.CTkFrame(frame, fg_color=mn.secondary_grey)
-    input_header_frame.pack(padx=1, pady=1)
+    input_header_frame.pack()
 
     # Create base frame for page
     beregn_frame = ctk.CTkFrame(frame, fg_color=mn.secondary_grey)
-    beregn_frame.pack(padx=1, pady=1)
+    beregn_frame.pack()
     # Create input frame for calculation
     input_frame = ctk.CTkFrame(beregn_frame, fg_color=mn.secondary_grey)
-    input_frame.pack(padx=2, pady=2)
+    input_frame.pack()
 
     # Create a footer frame for calculation
     output_frame = ctk.CTkFrame(beregn_frame, fg_color=mn.secondary_grey)
-    output_frame.pack(padx=1, pady=1)
+    output_frame.pack()
 
     ### Header for input frame
     header_label = ctk.CTkLabel(input_header_frame,
@@ -556,21 +556,32 @@ def beregn_page(frame):
         if mass_volume_combo.get() == "Mass":
             print_cost = dh.get_print_cost_from_mass(machine_combo.get(), material_combo.get(), "kg", mass_volume_amount_entry.get().replace(",", "."))
             calc_error_label.configure(text=f"Material cost: {print_cost:.2f} $")
+            ldb.insert_raw_cost_calculation_log(machine_combo.get(), material_combo.get(), mass_volume_amount_entry.get().replace(",", "."), "kg", print_cost)
+            mn.clear_frame(raw_cost_logs_frame)
+            ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
         elif mass_volume_combo.get() == "Volume":
             print_cost = dh.get_print_cost_from_volume(machine_combo.get(), material_combo.get(), "L", mass_volume_amount_entry.get().replace(",", "."))
             calc_error_label.configure(text=f"Material cost: {print_cost:.2f} $")
+            ldb.insert_raw_cost_calculation_log(machine_combo.get(), material_combo.get(), mass_volume_amount_entry.get().replace(",", "."), "L", print_cost)
+            mn.clear_frame(raw_cost_logs_frame)
+            ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
 
 
-    calc_error_label = ctk.CTkLabel(output_frame, text="")
-    calc_error_label.grid(row=7, column=0, columnspan=2, padx=5, pady=5)
+    calc_error_label = ctk.CTkLabel(output_frame, text="", width=header_label._current_width)
+    calc_error_label.grid(row=7, column=0)
 
     reset_calc_button = ctk.CTkButton(output_frame,
                                     text="Reset",
                                     command=lambda: reset_calculate())
-    reset_calc_button.grid(row=8, column=0, columnspan=2, padx=5, pady=5)
+    reset_calc_button.grid(row=8, column=0)
 
     def reset_calculate():
         beregn_page(frame)
+
+    
+    raw_cost_logs_frame = ctk.CTkFrame(frame, fg_color=mn.primary_grey)
+    raw_cost_logs_frame.pack(padx=1, pady=1)
+    ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
 
     mn.current_page = "Beregn"
     master.title(f"{mn.app_title} - {mn.current_page}")
@@ -677,7 +688,7 @@ def restart_dbs():
     udb.restart_tables_users_db()
     ldb.restart_logs()
 
-restart_dbs()
+# restart_dbs()
 
 # Run main loop
 master.mainloop()

@@ -32,7 +32,7 @@ def insert_user(username, password, admin):
         con.commit()
 
         # Insert log
-        ldb.insert_user_creation_logs(mn.user.username, username)
+        ldb.insert_user_creation_log(mn.user.username, username)
 
     except sql.IntegrityError as e:
         raise NameError("User already exists")
