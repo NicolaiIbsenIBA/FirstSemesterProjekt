@@ -67,6 +67,7 @@ def show_table(frame, data):
             create_entry_widget(item, column, col_index)
         elif columns == mn.material_columns and col_index == 4:
             create_entry_widget(item, column, col_index)
+    return table
 
 def sort_treeview(tree, col, reverse):
     l = [(tree.set(k, col), k) for k in tree.get_children('')]

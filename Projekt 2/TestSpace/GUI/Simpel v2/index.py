@@ -127,21 +127,21 @@ icon_label = ctk.CTkButton(header_frame_1,
                            width=1,
                            bg_color=mn.black,
                            fg_color=mn.black)
-icon_label.pack(padx=58, pady=2)
+icon_label.pack(padx=(52, 0), pady=(4, 0))
 
 logo = ctk.CTkImage(light_image=Image.open(mn.logo), size=(241, 55))
 admin_logo = ctk.CTkImage(light_image=Image.open(mn.admin_logo), size=(241, 55))
 logo_label = ctk.CTkLabel(header_frame_2, 
                           image=logo, 
                           text="")
-logo_label.pack()
+logo_label.pack(pady=(6, 0))
 
 user_frame = ctk.CTkFrame(header_frame_3, 
                           width=0, 
                           height=0, 
                           bg_color=mn.black,
                           fg_color=mn.black)
-user_frame.pack(padx=0, pady=0)
+user_frame.pack(pady=(6, 0))
 
 user_label = ctk.CTkLabel(user_frame,
                           text="Please log in to use the application",
@@ -194,37 +194,37 @@ def nav_setup(frame):
                                 text="Home",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: home_page(main_frame))
-        home_btn.grid(row=0, column=0, padx=8, pady=3)
+        home_btn.grid(row=0, column=0, padx=(2, 8), pady=(0, 5))
 
         user_btn = ctk.CTkButton(menu_frame,
                                 text="User",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: user_page(main_frame))
-        user_btn.grid(row=1, column=0, padx=8, pady=3)
+        user_btn.grid(row=1, column=0, padx=(2, 8), pady=(0, 5))
 
         database_btn = ctk.CTkButton(menu_frame,
                                     text="Database",
                                     fg_color=mn.secondary_grey,
                                     command=lambda: database_page(main_frame))
-        database_btn.grid(row=2, column=0, padx=8, pady=3)
+        database_btn.grid(row=2, column=0, padx=(2, 8), pady=(0, 5))
 
         beregn_btn = ctk.CTkButton(menu_frame,
                                 text="Beregn",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: beregn_page(main_frame))
-        beregn_btn.grid(row=3, column=0, padx=8, pady=3)
+        beregn_btn.grid(row=3, column=0, padx=(2, 8), pady=(0, 5))
 
         settings_btn = ctk.CTkButton(menu_frame,
                                     text="Settings",
                                     fg_color=mn.secondary_grey,
                                     command=lambda: settings_page(main_frame))
-        settings_btn.grid(row=4, column=0, padx=8, pady=3)
+        settings_btn.grid(row=4, column=0, padx=(2, 8), pady=(0, 5))
 
         logs_btn = ctk.CTkButton(menu_frame,
                                 text="Logs",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: logs_page(main_frame))
-        logs_btn.grid(row=5, column=0, padx=8, pady=3)
+        logs_btn.grid(row=5, column=0, padx=(2, 8), pady=(0, 5))
 
         if mn.user.admin == True:
             splitter = ctk.CTkFrame(menu_frame,
@@ -232,18 +232,18 @@ def nav_setup(frame):
                                     fg_color=mn.black,
                                     width=150,
                                     height=20)
-            splitter.grid(row=6, column=0, padx=8, pady=3)
+            splitter.grid(row=6, column=0, padx=(2, 8), pady=(0, 5))
 
             admin_btn1 = ctk.CTkButton(menu_frame,
                                     text="Admin settings",
                                     fg_color=mn.green_color,
                                     command=lambda: admin_settings_page(main_frame))
-            admin_btn1.grid(row=7, column=0, padx=8, pady=3)
+            admin_btn1.grid(row=7, column=0, padx=(2, 8), pady=(0, 5))
 
             admin_btn2 = ctk.CTkButton(menu_frame,
                                     text="Admin2",
                                     fg_color=mn.green_color)
-            admin_btn2.grid(row=8, column=0, padx=8, pady=3)
+            admin_btn2.grid(row=8, column=0, padx=(2, 8), pady=(0, 5))
 
 def login_page(frame):
     mn.clear_frame(frame)
@@ -685,7 +685,15 @@ def beregn_page(frame):
     
     raw_cost_logs_frame = ctk.CTkFrame(frame, fg_color=mn.primary_grey)
     raw_cost_logs_frame.pack(padx=1, pady=1)
-    ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
+    raw_table = ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
+
+    def on_double_click_raw_cost_log(event):
+        item = raw_table.selection()[0]
+        print(item)
+        print("Double clicked")
+
+    print(raw_table)
+    raw_table.bind("<Double-1>", on_double_click_raw_cost_log)
 
     mn.current_page = "Beregn"
     master.title(f"{mn.app_title} - {mn.current_page}")
@@ -720,7 +728,7 @@ footer = ctk.CTkFrame(master,
 footer.custom_name = "footer"
 footer.pack(side="bottom", fill="both")
 
-nav_frame.configure(height=(master._current_height-(header._current_height+footer._current_height+menu_frame._current_height+15)))
+nav_frame.configure(height=(master._current_height-(header._current_height+footer._current_height+menu_frame._current_height+14)))
 
 # Tkinter functions
 
@@ -734,7 +742,7 @@ def login(username, username_entry, password_entry):
                     fg_color=mn.secondary_grey,
                     border_color="red",
                     border_width=1)
-        btn.pack()
+        btn.pack(padx=(2, 8))
         user.username = username
         if check[1] == 1:
             user.admin = True
