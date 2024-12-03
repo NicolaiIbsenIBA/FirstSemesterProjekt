@@ -99,17 +99,17 @@ def decrepit_show_table(frame, liste):
 
 # Main window
 master = ctk.CTk()
-master.configure(bg=mn.black)
-master.geometry("700x700")
+master.geometry("700x600")
 master.iconbitmap(mn.ico)
 master.title("NexText CALC")
+master.configure(fg_color=mn.black, bg_color=mn.black)
 
 # Header
 header = ctk.CTkFrame(master,
                       bg_color=mn.black,
                       fg_color=mn.black)
 header.custom_name = "header"
-header.pack(side="top", fill="both", padx=0, pady=0)
+header.grid(row=0, column=0, sticky="nsew", columnspan=2)
 
 header_frame_1 = ctk.CTkFrame(header, bg_color=mn.black, fg_color=mn.black)
 header_frame_2 = ctk.CTkFrame(header, bg_color=mn.black, fg_color=mn.black)
@@ -127,21 +127,21 @@ icon_label = ctk.CTkButton(header_frame_1,
                            width=1,
                            bg_color=mn.black,
                            fg_color=mn.black)
-icon_label.pack(padx=(52, 0), pady=(4, 0))
+icon_label.pack(padx=(45, 0), pady=(0,2))
 
 logo = ctk.CTkImage(light_image=Image.open(mn.logo), size=(241, 55))
 admin_logo = ctk.CTkImage(light_image=Image.open(mn.admin_logo), size=(241, 55))
 logo_label = ctk.CTkLabel(header_frame_2, 
                           image=logo, 
                           text="")
-logo_label.pack(pady=(6, 0))
+logo_label.pack()
 
 user_frame = ctk.CTkFrame(header_frame_3, 
                           width=0, 
                           height=0, 
                           bg_color=mn.black,
                           fg_color=mn.black)
-user_frame.pack(pady=(6, 0))
+user_frame.pack()
 
 user_label = ctk.CTkLabel(user_frame,
                           text="Please log in to use the application",
@@ -150,42 +150,42 @@ user_label = ctk.CTkLabel(user_frame,
 user_label.pack(side="right", padx=10)
 
 # Body
-body = ctk.CTkScrollableFrame(master,
-                              fg_color=mn.black,
-                              bg_color=mn.black,
-                              height=500)
-body.pack(fill="both", expand="true", padx=0, pady=0)
+body = ctk.CTkFrame(master,
+                    fg_color=mn.black,
+                    bg_color=mn.black)
+body.grid(row=1, column=0, columnspan=2, sticky="nsew")
+
+scrollbody = ctk.CTkScrollableFrame(body,
+                              fg_color=mn.primary_grey    ,
+                              bg_color=mn.black)
+scrollbody.pack(side="right", fill="both", expand=True, padx=(0,6))
 
 nav_frame = ctk.CTkFrame(body,
                          fg_color=mn.black,
-                         bg_color=mn.black)
-nav_frame.pack(side="left", padx=0, pady=0)
+                         bg_color=mn.black,
+                         width=156)
+nav_frame.pack(side="left", fill="y")
+
 
 menu_frame = ctk.CTkFrame(nav_frame,
                           fg_color=mn.black,
                           bg_color=mn.black,
-                          width=166)
-menu_frame.pack(side="top", expand="true", fill="both")
-
-some_label = ctk.CTkLabel(nav_frame,
-                            text="",
-                            fg_color=mn.black,
-                            bg_color=mn.black,
-                            width=50)
-some_label.pack()
+                          width=nav_frame._current_width)
+menu_frame.pack(side="top")
 
 nav_logout_frame = ctk.CTkFrame(nav_frame,
                                 fg_color=mn.black,
                                 bg_color=mn.black,
-                                height=0,
-                                width=0)
+                                width=nav_frame._current_width)
 nav_logout_frame.pack(side="bottom")
 
-main_frame = ctk.CTkFrame(body,
+main_frame = ctk.CTkFrame(scrollbody,
                           fg_color=mn.primary_grey,
-                          bg_color=mn.black)
+                          bg_color=mn.primary_grey)
 main_frame.custom_name = "main"
-main_frame.pack(expand="true", fill="both", padx=0, pady=0)
+main_frame.pack(fill="both", expand=True)
+master.grid_columnconfigure(0, weight=1)
+master.grid_columnconfigure(1, weight=0)
 
 # Body functions
 def nav_setup(frame):
@@ -194,63 +194,64 @@ def nav_setup(frame):
                                 text="Home",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: home_page(main_frame))
-        home_btn.grid(row=0, column=0, padx=(2, 8), pady=(0, 5))
+        home_btn.grid(row=0, column=0, padx=(0, 1), pady=(0, 5))
 
         user_btn = ctk.CTkButton(menu_frame,
                                 text="User",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: user_page(main_frame))
-        user_btn.grid(row=1, column=0, padx=(2, 8), pady=(0, 5))
+        user_btn.grid(row=1, column=0, padx=(0, 1), pady=(0, 5))
 
         database_btn = ctk.CTkButton(menu_frame,
                                     text="Database",
                                     fg_color=mn.secondary_grey,
                                     command=lambda: database_page(main_frame))
-        database_btn.grid(row=2, column=0, padx=(2, 8), pady=(0, 5))
+        database_btn.grid(row=2, column=0, padx=(0, 1), pady=(0, 5))
 
         beregn_btn = ctk.CTkButton(menu_frame,
                                 text="Beregn",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: beregn_page(main_frame))
-        beregn_btn.grid(row=3, column=0, padx=(2, 8), pady=(0, 5))
+        beregn_btn.grid(row=3, column=0, padx=(0, 1), pady=(0, 5))
 
         settings_btn = ctk.CTkButton(menu_frame,
                                     text="Settings",
                                     fg_color=mn.secondary_grey,
                                     command=lambda: settings_page(main_frame))
-        settings_btn.grid(row=4, column=0, padx=(2, 8), pady=(0, 5))
+        settings_btn.grid(row=4, column=0, padx=(0, 1), pady=(0, 5))
 
         logs_btn = ctk.CTkButton(menu_frame,
                                 text="Logs",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: logs_page(main_frame))
-        logs_btn.grid(row=5, column=0, padx=(2, 8), pady=(0, 5))
+        logs_btn.grid(row=5, column=0, padx=(0, 1), pady=(0, 5))
 
         if mn.user.admin == True:
+            
             splitter = ctk.CTkFrame(menu_frame,
-                                    bg_color=mn.black,
-                                    fg_color=mn.black,
-                                    width=150,
-                                    height=20)
-            splitter.grid(row=6, column=0, padx=(2, 8), pady=(0, 5))
+                                      fg_color=mn.black,
+                                      bg_color=mn.black,
+                                      width = 0,
+                                      height = 20)
+            splitter.grid(row=6, column=0)
 
             admin_btn1 = ctk.CTkButton(menu_frame,
                                     text="Admin settings",
                                     fg_color=mn.green_color,
                                     command=lambda: admin_settings_page(main_frame))
-            admin_btn1.grid(row=7, column=0, padx=(2, 8), pady=(0, 5))
+            admin_btn1.grid(row=7, column=0, padx=(0, 1), pady=(0, 5))
 
             admin_btn2 = ctk.CTkButton(menu_frame,
                                     text="Admin2",
                                     fg_color=mn.green_color)
-            admin_btn2.grid(row=8, column=0, padx=(2, 8), pady=(0, 5))
+            admin_btn2.grid(row=8, column=0, padx=(0, 1), pady=(0, 5))
 
 def login_page(frame):
     mn.clear_frame(frame)
     login_frame = ctk.CTkFrame(frame,
                                border_width=1,
                                fg_color=mn.black)
-    login_frame.pack(expand="true")
+    login_frame.pack(expand=True, pady=(frame._current_height/3, 0)) 
 
     username_label = ctk.CTkLabel(login_frame,
                                   text="Username")
@@ -374,7 +375,7 @@ def home_page(frame):
         master.title(f"{mn.app_title} - {mn.current_page}")
     else:
         print("Please log in first")
-    resize("")
+    # resize("")
 
 def settings_page(frame):
         mn.clear_frame(frame)
@@ -692,7 +693,6 @@ def beregn_page(frame):
         print(item)
         print("Double clicked")
 
-    print(raw_table)
     raw_table.bind("<Double-1>", on_double_click_raw_cost_log)
 
     mn.current_page = "Beregn"
@@ -724,11 +724,10 @@ login_page(main_frame)
 footer = ctk.CTkFrame(master,
                       fg_color=mn.black,
                       bg_color=mn.black,
-                      height=5)
+                      height=8,
+                      width=master._current_width)
 footer.custom_name = "footer"
-footer.pack(side="bottom", fill="both")
-
-nav_frame.configure(height=(master._current_height-(header._current_height+footer._current_height+menu_frame._current_height+14)))
+footer.grid(row=2, column=0, columnspan=2)
 
 # Tkinter functions
 
@@ -742,7 +741,7 @@ def login(username, username_entry, password_entry):
                     fg_color=mn.secondary_grey,
                     border_color="red",
                     border_width=1)
-        btn.pack(padx=(2, 8))
+        btn.grid(row=0, column=0, padx=8)
         user.username = username
         if check[1] == 1:
             user.admin = True
@@ -752,7 +751,7 @@ def login(username, username_entry, password_entry):
             user.admin = False
             logo_label.configure(image=logo)
         # mn.clear_frame(main_frame)
-        main_frame.pack()
+        # main_frame.pack()
         home_page(main_frame)
         user_label.configure(text=f"Hello, {mn.user.username}")
         greet_user()
@@ -773,7 +772,7 @@ def logout():
     mn.clear_frame(menu_frame)
     mn.clear_frame(nav_logout_frame)
     logo_label.configure(image=logo)
-    some_label.configure(height=(master._current_height-(header._current_height+footer._current_height+menu_frame._current_height+15)))
+    # some_label.configure(height=(master._current_height-(header._current_height+footer._current_height+menu_frame._current_height+15)))
 
 def insert_user(frame, username, password, admin):
     testlabel = ctk.CTkLabel(frame,
@@ -807,11 +806,14 @@ def restart_dbs():
     ldb.restart_logs()
 
 # restart_dbs()
+
 list_of_resizes = []
 def resize(event):
-    some_label.configure(height=master._current_height-(header._current_height+footer._current_height+menu_frame._current_height+15+nav_logout_frame._current_height))
+    scrollbody.configure(height=master._current_height-(header._current_height+footer._current_height+15))
+    list_of_resizes.append("")
+    print(list_of_resizes.__len__())
 
-main_frame.bind("<Configure>", resize)
+body.bind("<Configure>", resize)
 
 # Run main loop
 master.mainloop()
