@@ -11,8 +11,10 @@ import my_names as mn
 import NextTech_db as ntdb
 
 def show_table(frame, data):
+    wrapper_frame = ctk.CTkFrame(frame, fg_color=mn.primary_grey, bg_color=mn.primary_grey)
+    table_frame = ctk.CTkFrame(wrapper_frame, fg_color=mn.primary_grey, bg_color=mn.primary_grey)
     columns = list(data.columns.str.capitalize().str.replace('_', ' '))
-    table = ttk.Treeview(frame, columns=columns, show='headings', selectmode='browse')
+    table = ttk.Treeview(table_frame, columns=columns, show='headings', selectmode='browse')
 
     for col in columns:
         table.heading(col, text=col, command=lambda _col=col: sort_treeview(table, _col, False))
@@ -21,29 +23,22 @@ def show_table(frame, data):
     for _, row in data.iterrows():
         values = row.tolist()
         table.insert('', 'end', values=values)
-    
+
     # Add vertical scrollbar
-    vsb = ctk.CTkScrollbar(frame, orientation="vertical", command=table.yview)
+    vsb = ctk.CTkScrollbar(table_frame, orientation="vertical", command=table.yview)
     table.configure(yscrollcommand=vsb.set)
     vsb.pack(side='right', fill='y')
+    
+    table.pack(fill='both', expand=True)
 
     # Add horizontal scrollbar
-    hsb = ctk.CTkScrollbar(frame, orientation="horizontal", command=table.xview)
+    hsb = ctk.CTkScrollbar(table_frame, orientation="horizontal", command=table.xview)
     table.configure(xscrollcommand=hsb.set)
-    hsb.pack(side='bottom', fill='x')
-
-    if mn.user.admin:
-        # Add button to save changes
-        table.bind('<Double-1>', lambda event: on_double_click(event))
-        save_button = ctk.CTkButton(frame, text='Save changes', 
-                                    command=lambda: changes_made(data, get_table_as_dataframe(table)))
-        save_button.pack(side='bottom')
-
-    table.pack(fill='both', expand=True, pady=5)
+    hsb.pack(fill="x")
 
     def create_entry_widget(item, column, col_index):
         x, y, width, height = table.bbox(item, column)
-        entry = tk.Entry(frame)
+        entry = tk.Entry(table_frame)
         entry.place(x=x, y=y, width=width, height=height)
         entry.focus()
         entry.insert(0, table.item(item)['values'][col_index])
@@ -67,7 +62,15 @@ def show_table(frame, data):
             create_entry_widget(item, column, col_index)
         elif columns == mn.material_columns and col_index == 4:
             create_entry_widget(item, column, col_index)
-    return table
+
+    if mn.user.admin and columns == mn.workers_columns or columns == mn.material_columns:
+        # Add button to save changes
+        table.bind('<Double-1>', lambda event: on_double_click(event))
+        save_button = ctk.CTkButton(wrapper_frame, text='Save changes', 
+                                    command=lambda: changes_made(data, get_table_as_dataframe(table)))
+        save_button.pack(side='bottom')
+    table_frame.pack(fill='both', expand=True)
+    return wrapper_frame
 
 def sort_treeview(tree, col, reverse):
     l = [(tree.set(k, col), k) for k in tree.get_children('')]

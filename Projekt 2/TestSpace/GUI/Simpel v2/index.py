@@ -395,25 +395,35 @@ def database_page(frame):
                                                  bg_color=mn.primary_grey,
                                                  fg_color=mn.primary_grey, 
                                                  width=frame._current_width,
-                                                 height=400)
+                                                 height=400,
+                                                 border_width=1)
+        
+        minor_db_header1 = ctk.CTkLabel(minor_db_frame1,
+                                        text="Workers",
+                                        font=("Arial", 18),
+                                        text_color=mn.black)
+        minor_db_header1.pack(pady=2)
+        minor_db_frame1.pack(padx=5, pady=5)
 
         minor_db_frame2 = ctk.CTkFrame(frame,
                                        bg_color=mn.primary_grey,
                                        fg_color=mn.primary_grey,
-                                       width=frame._current_width)
+                                       width=frame._current_width,
+                                       border_width=1)
+        minor_db_header2 = ctk.CTkLabel(minor_db_frame2,
+                                        text="Material specifications",
+                                        font=("Arial", 18),
+                                        text_color=mn.black)
+        minor_db_header2.pack(pady=2)
+        minor_db_frame2.pack(padx=5, pady=5)
 
-        ts.show_table(minor_db_frame1, ntdb.sql_select_workers_data())
-        ts.show_table(minor_db_frame2, ntdb.sql_select_material_specifications_data())
+        workers_table = ts.show_table(minor_db_frame1, ntdb.sql_select_workers_data())
+        material_table = ts.show_table(minor_db_frame2, ntdb.sql_select_material_specifications_data())
+
+        workers_table.pack(expand=True)
+        material_table.pack(expand=True)
 
         
-        minor_db_frame1.pack(padx = 3, pady=3, fill="both", expand=True)
-        minor_db_frame2.pack(padx = 3, pady=3, fill="both")
-
-        """confirm_btn = ctk.CTkButton(frame,
-                                    text="Confirm",
-                                    fg_color=mn.green_color,
-                                    command=lambda: ts.changes_made(ntdb.sql_select_workers_data(), ts.get_table_as_dataframe(tabel)))
-        confirm_btn.pack(side="bottom", fill="both")"""
 
         mn.current_page = "Database"
         master.title(f"{mn.app_title} - {mn.current_page}")
@@ -423,9 +433,7 @@ def user_page(frame):
     frame_configure(frame)
     frame.configure(border_width=0)
 
-    first_frame = ctk.CTkFrame(frame,
-                                   border_width=1,
-                                   fg_color=mn.primary_grey)
+    first_frame = ctk.CTkFrame(frame, width=0, height=0, fg_color=mn.primary_grey)
     first_frame.pack(pady=10)
         # Insert a new user for admins
     if user.admin == True:
@@ -468,13 +476,11 @@ def user_page(frame):
                                            command=lambda: insert_user(first_frame, new_user_username_entry, new_user_password_entry, new_user_admin_entry))
         new_user_button.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
 
-    second_frame = ctk.CTkFrame(frame,
-                                       border_width=1,
-                                       fg_color=mn.primary_grey)
-    second_frame.pack(fill="both", padx=10, pady=10)
+    second_frame = ctk.CTkFrame(frame, width=0, height=0, fg_color=mn.primary_grey)
+    second_frame.pack(pady=10)
 
-    ts.show_table(second_frame, ldb.select_user_creation_logs())
-
+    user_creation_table = ts.show_table(second_frame, ldb.select_user_creation_logs())
+    user_creation_table.pack(expand=True, padx=5, pady=5)
 
     mn.current_page = "User"
     master.title(f"{mn.app_title} - {mn.current_page}")
@@ -631,7 +637,7 @@ def beregn_page(frame):
                                             text="Material amount")
     mass_volume_amount_label.grid(row=5, column=0, padx=5, pady=5)
 
-    mass_volume_amount_entry = ctk.CTkEntry(input_frame, width=125, height=20)
+    mass_volume_amount_entry = ctk.CTkEntry(input_frame, width=145, height=20)
     mass_volume_amount_entry.grid(row=5, column=1)
 
     mass_volume_amount_unit_label = ctk.CTkLabel(input_frame,
@@ -663,13 +669,13 @@ def beregn_page(frame):
             calc_error_label.configure(text=f"Material cost: {print_cost:.2f} $")
             ldb.insert_raw_cost_calculation_log(machine_combo.get(), material_combo.get(), mass_volume_amount_entry.get().replace(",", "."), "kg", print_cost)
             mn.clear_frame(raw_cost_logs_frame)
-            ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
+            ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs()).pack(expand=True)
         elif mass_volume_combo.get() == "Volume":
             print_cost = dh.get_print_cost_from_volume(machine_combo.get(), material_combo.get(), "L", mass_volume_amount_entry.get().replace(",", "."))
             calc_error_label.configure(text=f"Material cost: {print_cost:.2f} $")
             ldb.insert_raw_cost_calculation_log(machine_combo.get(), material_combo.get(), mass_volume_amount_entry.get().replace(",", "."), "L", print_cost)
             mn.clear_frame(raw_cost_logs_frame)
-            ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
+            ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs()).pack(expand=True)
 
 
     calc_error_label = ctk.CTkLabel(output_frame, text="", width=header_label._current_width)
@@ -687,6 +693,7 @@ def beregn_page(frame):
     raw_cost_logs_frame = ctk.CTkFrame(frame, fg_color=mn.primary_grey)
     raw_cost_logs_frame.pack(padx=1, pady=1)
     raw_table = ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
+    raw_table.pack(expand=True)
 
     def on_double_click_raw_cost_log(event):
         item = raw_table.selection()[0]
@@ -805,7 +812,7 @@ def restart_dbs():
     udb.restart_tables_users_db()
     ldb.restart_logs()
 
-restart_dbs()
+# restart_dbs()
 
 list_of_resizes = []
 def resize(event):

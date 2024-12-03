@@ -78,7 +78,7 @@ def drop_raw_cost_calculation():
 def select_user_creation_logs():
     try:
         found = pd.read_sql_query('''
-            SELECT logs.user, userCreation.userCreated
+            SELECT logs.timestamp, logs.user, userCreation.userCreated
             FROM logs
             INNER JOIN userCreation ON logs.creationId = userCreation.creationId
             WHERE actionType = 'USER creation'
