@@ -4,7 +4,7 @@ import classes as cl
 import logs_db as ldb
 import my_names as mn
 
-con = sql.connect(mn.userCredentials_db_location)
+con = sql.connect(mn.userCredentials_db_path)
 
 # Data collections
 

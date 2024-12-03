@@ -2,7 +2,7 @@ import sqlite3
 import pandas as pd
 import my_names as mn
 
-con = sqlite3.connect(mn.logs_location)
+con = sqlite3.connect(mn.logs_db_path)
 
 # Create table
 def create_logs_table():

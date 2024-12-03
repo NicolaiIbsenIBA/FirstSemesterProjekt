@@ -1,5 +1,6 @@
 import classes as cl
 import pandas as pd
+import os
 
 labelgen = pd.DataFrame ({
             'Settings': ['Material Specifications', 'Workers', 'Machines', 'Products', 'Orders', 'Settings', 'Settings', 'Settings', 'Settings', 'Settings', 'Settings', 'Settings'],
@@ -13,18 +14,18 @@ workers_table = 'workers'
 workers_columns = ['Process', 'Jobtitle', 'Salary']
 
 # Database locations
-logs_location = "Simpel v2/logs.db"
-nextTech_db_location = "Simpel v2/nextTech.db"
-userCredentials_db_location = "Simpel v2/userCredentials.db"
+logs_db_path = os.path.join("Databases", "logs.db")
+nextTech_db_path = os.path.join("Databases", "nextTech.db")
+userCredentials_db_path = os.path.join("Databases", "userCredentials.db")
 
 # Name of app
 app_title = "NextTech CALC"
 
 # Assets
-logo = "Assets/logo.png"
-admin_logo = "Assets/logo_admin.png"
-home_icon = "Assets/IBA_icon.png"
-ico = "Assets/IBA_icon_ico.ico"
+logo_path = os.path.join("Assets", "logo.png")
+admin_logo_path = os.path.join("Assets", "admin_logo.png")
+home_icon_path = os.path.join("Assets", "IBA_icon.png")
+ico_path = os.path.join("Assets", "IBA_icon_ico.ico")
 
 # Colors
 light_color = "#f4f4f4"

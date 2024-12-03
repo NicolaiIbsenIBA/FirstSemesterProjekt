@@ -100,7 +100,7 @@ def decrepit_show_table(frame, liste):
 # Main window
 master = ctk.CTk()
 master.geometry("700x600")
-master.iconbitmap(mn.ico)
+master.iconbitmap(mn.ico_path)
 master.title("NexText CALC")
 master.configure(fg_color=mn.black, bg_color=mn.black)
 
@@ -119,7 +119,7 @@ header_frame_2.grid(row=0, column=1)
 header_frame_3.grid(row=0, column=2, sticky="e", padx=5)
 header.grid_columnconfigure((0,1,2), weight=1, uniform="column")
 
-icon = ctk.CTkImage(light_image=Image.open(mn.home_icon), size=(50, 50))
+icon = ctk.CTkImage(light_image=Image.open(mn.home_icon_path), size=(50, 50))
 icon_label = ctk.CTkButton(header_frame_1, 
                            image=icon, 
                            command=lambda: home_page(main_frame), 
@@ -129,8 +129,8 @@ icon_label = ctk.CTkButton(header_frame_1,
                            fg_color=mn.black)
 icon_label.pack(padx=(45, 0), pady=(0,2))
 
-logo = ctk.CTkImage(light_image=Image.open(mn.logo), size=(241, 55))
-admin_logo = ctk.CTkImage(light_image=Image.open(mn.admin_logo), size=(241, 55))
+logo = ctk.CTkImage(light_image=Image.open(mn.logo_path), size=(241, 55))
+admin_logo = ctk.CTkImage(light_image=Image.open(mn.admin_logo_path), size=(241, 55))
 logo_label = ctk.CTkLabel(header_frame_2, 
                           image=logo, 
                           text="")
@@ -805,7 +805,7 @@ def restart_dbs():
     udb.restart_tables_users_db()
     ldb.restart_logs()
 
-# restart_dbs()
+restart_dbs()
 
 list_of_resizes = []
 def resize(event):

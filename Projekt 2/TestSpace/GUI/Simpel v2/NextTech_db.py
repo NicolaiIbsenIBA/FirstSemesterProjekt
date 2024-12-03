@@ -2,7 +2,7 @@ import sqlite3 as sql
 import pandas as pd
 import my_names as mn
 
-con = sql.connect(mn.nextTech_db_location)
+con = sql.connect(mn.nextTech_db_path)
 
 # Data collections
 material_specifications_data = pd.DataFrame({
