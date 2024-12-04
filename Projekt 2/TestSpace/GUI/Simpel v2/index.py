@@ -194,37 +194,37 @@ def nav_setup(frame):
                                 text="Home",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: home_page(main_frame))
-        home_btn.grid(row=0, column=0, padx=(0, 1), pady=(0, 5))
+        home_btn.grid(row=0, column=0, padx=(0, 0), pady=(0, 5))
 
         user_btn = ctk.CTkButton(menu_frame,
                                 text="User",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: user_page(main_frame))
-        user_btn.grid(row=1, column=0, padx=(0, 1), pady=(0, 5))
+        user_btn.grid(row=1, column=0, padx=(0, 0), pady=(0, 5))
 
         database_btn = ctk.CTkButton(menu_frame,
                                     text="Database",
                                     fg_color=mn.secondary_grey,
                                     command=lambda: database_page(main_frame))
-        database_btn.grid(row=2, column=0, padx=(0, 1), pady=(0, 5))
+        database_btn.grid(row=2, column=0, padx=(0, 0), pady=(0, 5))
 
         beregn_btn = ctk.CTkButton(menu_frame,
                                 text="Beregn",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: beregn_page(main_frame))
-        beregn_btn.grid(row=3, column=0, padx=(0, 1), pady=(0, 5))
+        beregn_btn.grid(row=3, column=0, padx=(0, 0), pady=(0, 5))
 
         settings_btn = ctk.CTkButton(menu_frame,
                                     text="Settings",
                                     fg_color=mn.secondary_grey,
                                     command=lambda: settings_page(main_frame))
-        settings_btn.grid(row=4, column=0, padx=(0, 1), pady=(0, 5))
+        settings_btn.grid(row=4, column=0, padx=(0, 0), pady=(0, 5))
 
         logs_btn = ctk.CTkButton(menu_frame,
                                 text="Logs",
                                 fg_color=mn.secondary_grey,
                                 command=lambda: logs_page(main_frame))
-        logs_btn.grid(row=5, column=0, padx=(0, 1), pady=(0, 5))
+        logs_btn.grid(row=5, column=0, padx=(0, 0), pady=(0, 5))
 
         if mn.user.admin == True:
             
@@ -239,19 +239,19 @@ def nav_setup(frame):
                                     text="Admin settings",
                                     fg_color=mn.green_color,
                                     command=lambda: admin_settings_page(main_frame))
-            admin_btn1.grid(row=7, column=0, padx=(0, 1), pady=(0, 5))
+            admin_btn1.grid(row=7, column=0, padx=(0, 0), pady=(0, 5))
 
             admin_btn2 = ctk.CTkButton(menu_frame,
                                     text="Admin2",
                                     fg_color=mn.green_color)
-            admin_btn2.grid(row=8, column=0, padx=(0, 1), pady=(0, 5))
+            admin_btn2.grid(row=8, column=0, padx=(0, 0), pady=(0, 5))
 
 def login_page(frame):
     mn.clear_frame(frame)
     login_frame = ctk.CTkFrame(frame,
                                border_width=1,
                                fg_color=mn.black)
-    login_frame.pack(expand=True, pady=(frame._current_height/3, 0)) 
+    login_frame.pack(expand=True, pady=(master._current_height/3, 0))
 
     username_label = ctk.CTkLabel(login_frame,
                                   text="Username")
@@ -270,7 +270,9 @@ def login_page(frame):
 
     login_button = ctk.CTkButton(login_frame,
                                  fg_color=mn.green_color,
-                                 text="Login",
+                                 text="Login", 
+                                 border_width=1,
+                                 border_color=mn.black,
                                  command=lambda: login(username_entry.get(), username_entry, password_entry))
     login_button.grid(row=2, column=0, columnspan=2, sticky="ew", padx=3, pady=3)
 
@@ -293,7 +295,7 @@ def home_page(frame):
         mn.clear_frame(frame)
 
         home_frame = ctk.CTkFrame(frame, fg_color=mn.background_grey)
-        home_frame.pack()
+        home_frame.pack(pady=5)
 
         btn_list = []
 
@@ -363,7 +365,7 @@ def home_page(frame):
         i = 0
         j = 0
         while True:
-            btn_list[i].grid(row=j, column=(i-(3*j)), padx=3, pady=3)
+            btn_list[i].grid(row=j, column=(i-(3*j)), padx=3, pady=(0, 6))
             if ((i+1) / 3).is_integer():
                 j+=1
             i+=1
@@ -434,7 +436,7 @@ def user_page(frame):
     frame.configure(border_width=0)
 
     first_frame = ctk.CTkFrame(frame, width=0, height=0, fg_color=mn.primary_grey)
-    first_frame.pack(pady=10)
+    first_frame.pack(pady=(5, 0))
         # Insert a new user for admins
     if user.admin == True:
         testframe = ctk.CTkFrame(first_frame,
@@ -473,11 +475,13 @@ def user_page(frame):
         new_user_button = ctk.CTkButton(new_user_frame,
                                            text="Insert user",
                                            fg_color=mn.green_color,
+                                           border_width=1,
+                                           border_color=mn.black,
                                            command=lambda: insert_user(first_frame, new_user_username_entry, new_user_password_entry, new_user_admin_entry))
         new_user_button.grid(row=3, column=0, columnspan=2, sticky="ew", padx=5, pady=5)
 
     second_frame = ctk.CTkFrame(frame, width=0, height=0, fg_color=mn.primary_grey)
-    second_frame.pack(pady=10)
+    second_frame.pack(pady=5)
 
     user_creation_table = ts.show_table(second_frame, ldb.select_user_creation_logs())
     user_creation_table.pack(expand=True, padx=5, pady=5)
@@ -492,19 +496,19 @@ def beregn_page(frame):
     # Get data for the comboboxes/selections
     material_specs = ntdb.sql_select_material_specifications_data()
 
-    input_header_frame = ctk.CTkFrame(frame, fg_color=mn.secondary_grey)
-    input_header_frame.pack(pady=5)
+    input_header_frame = ctk.CTkFrame(frame, fg_color=mn.secondary_grey, bg_color=mn.primary_grey, border_width=1)
+    input_header_frame.pack(pady=(5, 0))
 
     # Create base frame for page
-    beregn_frame = ctk.CTkFrame(frame, fg_color=mn.secondary_grey)
+    beregn_frame = ctk.CTkFrame(frame, fg_color=mn.secondary_grey, bg_color=mn.primary_grey, border_width=1)
     beregn_frame.pack()
     # Create input frame for calculation
     input_frame = ctk.CTkFrame(beregn_frame, fg_color=mn.secondary_grey)
-    input_frame.pack()
+    input_frame.pack(padx=2, pady=2)
 
     # Create a footer frame for calculation
     output_frame = ctk.CTkFrame(beregn_frame, fg_color=mn.secondary_grey)
-    output_frame.pack()
+    output_frame.pack(pady=(0, 5))
 
     ### Header for input frame
     header_label = ctk.CTkLabel(input_header_frame,
@@ -512,9 +516,8 @@ def beregn_page(frame):
                                 font=("Arial", 18),
                                 fg_color=mn.secondary_grey,
                                 bg_color=mn.secondary_grey,
-                                width=275,
                                 corner_radius=5)
-    header_label.pack(pady=5)
+    header_label.pack(padx=2, pady=2)
 
 
     
@@ -527,7 +530,7 @@ def beregn_page(frame):
                                    values=[i for i in material_specs["printType"].unique()],
                                     width=20,
                                     state="readonly")
-    printtype_combo.grid(row=0, column=1, padx=5, pady=5)
+    printtype_combo.grid(row=0, column=1, padx=5, pady=5, sticky="w")
     
     def printtype_callback(*args):
         # Empty dataframe
@@ -637,19 +640,23 @@ def beregn_page(frame):
                                             text="Material amount")
     mass_volume_amount_label.grid(row=5, column=0, padx=5, pady=5)
 
-    mass_volume_amount_entry = ctk.CTkEntry(input_frame, width=145, height=20)
-    mass_volume_amount_entry.grid(row=5, column=1)
+    mass_volume_amount_entry = ctk.CTkEntry(input_frame, width=130, height=20)
+    mass_volume_amount_entry.grid(row=5, column=1, sticky="w", padx=(4,0))
 
-    mass_volume_amount_unit_label = ctk.CTkLabel(input_frame,
+    unit_label_frame = ctk.CTkFrame(input_frame, fg_color=mn.secondary_grey, bg_color=mn.secondary_grey)
+    unit_label_frame.grid(row=5, column=1, padx=(mass_volume_amount_entry._current_width, 0))
+
+    mass_volume_amount_unit_label = ctk.CTkLabel(unit_label_frame,
                                                  text="kg",
-                                                 width=20)
-    mass_volume_amount_unit_label.grid(row=5, column=2, padx=5, pady=5)
+                                                 width=14)
+    mass_volume_amount_unit_label.pack(side="left")
 
     calculate_button = ctk.CTkButton(output_frame,
                                     text="Calculate",
-                                    fg_color=mn.secondary_grey,
-                                    command=lambda: btn_calculate(),
-                                    border_width=1)
+                                    fg_color=mn.secondary_grey, 
+                                    border_width=1,
+                                    border_color=mn.black,
+                                    command=lambda: btn_calculate())
     calculate_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
 
     def btn_calculate():
@@ -701,6 +708,8 @@ def beregn_page(frame):
         print("Double clicked")
 
     raw_table.bind("<Double-1>", on_double_click_raw_cost_log)
+
+    header_label.configure(width=input_frame._current_width)
 
     mn.current_page = "Beregn"
     master.title(f"{mn.app_title} - {mn.current_page}")

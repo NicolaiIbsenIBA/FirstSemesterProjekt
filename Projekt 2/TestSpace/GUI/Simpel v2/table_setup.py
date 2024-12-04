@@ -63,12 +63,16 @@ def show_table(frame, data):
         elif columns == mn.material_columns and col_index == 4:
             create_entry_widget(item, column, col_index)
 
-    if mn.user.admin and columns == mn.workers_columns or columns == mn.material_columns:
-        # Add button to save changes
-        table.bind('<Double-1>', lambda event: on_double_click(event))
-        save_button = ctk.CTkButton(wrapper_frame, text='Save changes', 
-                                    command=lambda: changes_made(data, get_table_as_dataframe(table)))
-        save_button.pack(side='bottom')
+    if mn.user.admin:
+        if columns == mn.workers_columns or columns == mn.material_columns:
+            # Add button to save changes
+            table.bind('<Double-1>', lambda event: on_double_click(event))
+            save_button = ctk.CTkButton(wrapper_frame, text='Save changes',
+                                        fg_color=mn.green_color, 
+                                        border_width=1,
+                                        border_color=mn.black,
+                                        command=lambda: changes_made(data, get_table_as_dataframe(table)))
+            save_button.pack(side='bottom')
     table_frame.pack(fill='both', expand=True)
     return wrapper_frame
 
