@@ -13,15 +13,12 @@ import Datahandling as dh
 import table_setup as ts
 import logs_db as ldb
 
-# Declare variables
-user = cl.Credentials(None, None, False)
-
 # Functions
 def greet_user():
-    if user.username is None:
+    if mn.user.username is None:
         print("Hello guest")
     else:
-        print(f"Hello {user.username}")
+        print(f"Hello {mn.user.username}")
 
 # Test functions
 def label_gen(frame, labels):
@@ -109,7 +106,7 @@ header = ctk.CTkFrame(master,
                       bg_color=mn.black,
                       fg_color=mn.black)
 header.custom_name = "header"
-header.grid(row=0, column=0, sticky="nsew", columnspan=2)
+header.grid(row=0, column=0, sticky="nsew")
 
 header_frame_1 = ctk.CTkFrame(header, bg_color=mn.black, fg_color=mn.black)
 header_frame_2 = ctk.CTkFrame(header, bg_color=mn.black, fg_color=mn.black)
@@ -291,7 +288,7 @@ def login_page(frame):
 def home_page(frame):
     if mn.current_page == "Home":
         print("Already on home page")
-    elif not user.username == None:
+    elif not mn.user.username == None:
         mn.clear_frame(frame)
 
         home_frame = ctk.CTkFrame(frame, fg_color=mn.background_grey)
@@ -344,7 +341,7 @@ def home_page(frame):
                                  border_color=mn.black)
         btn_list.append(logs_btn)
 
-        if user.admin == True:
+        if mn.user.admin == True:
             admin_btn1 = ctk.CTkButton(home_frame,
                                       text="Admin settings",
                                       height=100,
@@ -438,7 +435,7 @@ def user_page(frame):
     first_frame = ctk.CTkFrame(frame, width=0, height=0, fg_color=mn.primary_grey)
     first_frame.pack(pady=(5, 0))
         # Insert a new user for admins
-    if user.admin == True:
+    if mn.user.admin == True:
         testframe = ctk.CTkFrame(first_frame,
                                      border_width=1,
                                      fg_color=mn.secondary_grey)
@@ -530,7 +527,7 @@ def beregn_page(frame):
                                    values=[i for i in material_specs["printType"].unique()],
                                     width=20,
                                     state="readonly")
-    printtype_combo.grid(row=0, column=1, padx=5, pady=5, sticky="w")
+    printtype_combo.grid(row=0, column=1, padx=5, pady=5)
     
     def printtype_callback(*args):
         # Empty dataframe
@@ -640,11 +637,11 @@ def beregn_page(frame):
                                             text="Material amount")
     mass_volume_amount_label.grid(row=5, column=0, padx=5, pady=5)
 
-    mass_volume_amount_entry = ctk.CTkEntry(input_frame, width=130, height=20)
+    mass_volume_amount_entry = ctk.CTkEntry(input_frame, width=110, height=20)
     mass_volume_amount_entry.grid(row=5, column=1, sticky="w", padx=(4,0))
 
     unit_label_frame = ctk.CTkFrame(input_frame, fg_color=mn.secondary_grey, bg_color=mn.secondary_grey)
-    unit_label_frame.grid(row=5, column=1, padx=(mass_volume_amount_entry._current_width, 0))
+    unit_label_frame.grid(row=5, column=1, padx=(mass_volume_amount_entry._current_width+5, 0))
 
     mass_volume_amount_unit_label = ctk.CTkLabel(unit_label_frame,
                                                  text="kg",
@@ -702,14 +699,15 @@ def beregn_page(frame):
     raw_table = ts.show_table(raw_cost_logs_frame, ldb.select_raw_cost_calculation_logs())
     raw_table.pack(expand=True)
 
+    
+    header_label.configure(width=input_frame._current_width)
+
     def on_double_click_raw_cost_log(event):
         item = raw_table.selection()[0]
         print(item)
         print("Double clicked")
 
     raw_table.bind("<Double-1>", on_double_click_raw_cost_log)
-
-    header_label.configure(width=input_frame._current_width)
 
     mn.current_page = "Beregn"
     master.title(f"{mn.app_title} - {mn.current_page}")
@@ -758,13 +756,13 @@ def login(username, username_entry, password_entry):
                     border_color="red",
                     border_width=1)
         btn.grid(row=0, column=0, padx=8)
-        user.username = username
+        mn.user.username = username
         if check[1] == 1:
-            user.admin = True
-            mn.user = user
+            mn.user.admin = True
+            mn.user = mn.user
             logo_label.configure(image=admin_logo)
         else:
-            user.admin = False
+            mn.user.admin = False
             logo_label.configure(image=logo)
         # mn.clear_frame(main_frame)
         # main_frame.pack()
@@ -781,7 +779,7 @@ def login(username, username_entry, password_entry):
                                  border_width=1)
 
 def logout():
-    user.username = None
+    mn.user.username = None
     print("Logged out")
     user_label.configure(text="Please log in to use the application")
     login_page(main_frame)
@@ -826,8 +824,6 @@ def restart_dbs():
 list_of_resizes = []
 def resize(event):
     scrollbody.configure(height=master._current_height-(header._current_height+footer._current_height+15))
-    list_of_resizes.append("")
-    print(list_of_resizes.__len__())
 
 body.bind("<Configure>", resize)
 

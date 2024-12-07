@@ -67,16 +67,16 @@ def sql_select_material_from_query(query):
         print(e)
 
 # Insert queries
-def sql_insert_material_specifications_data(query):
+def sql_insert_material_specifications_data(df):
     try:
-        query.to_sql('materialSpecifications', con, if_exists='append', index=False)
+        df.to_sql('materialSpecifications', con, if_exists='append', index=False)
         con.commit()
     except Exception as e:
         print(e)
 
-def sql_insert_workers_data(query):
+def sql_insert_workers_data(df):
     try:
-        query.to_sql('workers', con, if_exists='append', index=False)
+        df.to_sql('workers', con, if_exists='append', index=False)
         con.commit()
     except Exception as e:
         print(e)
@@ -117,26 +117,6 @@ def sql_create_workers_table():
         print(e)
 
 # Update queries
-"""def sql_update_material_specifications_data(query):
-    try:
-        query.to_sql('materialSpecifications', con, if_exists='replace', index=False)
-        con.commit()
-    except Exception as e:
-        print(e)
-
-def sql_update_material_specifications_data(df):
-    try:
-        cursor = con.cursor()
-        for _, row in df.iterrows():
-            cursor.execute('''
-                UPDATE materialSpecifications
-                SET materialName = ?, density = ?
-                WHERE materialId = ?
-            ''', (row['materialName'], row['density'], row['materialId']))
-        con.commit()
-    except Exception as e:
-        print(e)
-"""
 def sql_update_from_list(query):
     try:
         for i in query:

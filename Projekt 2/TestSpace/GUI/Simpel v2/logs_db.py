@@ -43,7 +43,7 @@ def insert_user_creation_log(user, new_user):
     cur.execute("SELECT creationId FROM userCreation WHERE userCreated = ?", (new_user,))
     action_id = cur.fetchone()[0]
     
-    cur.execute("INSERT INTO logs (user, actionType, creationId) VALUES (?, 'USER creation', ?)", (user, action_id))
+    cur.execute("INSERT INTO logs (user, actionType, creationId) VALUES (?, 'user creation', ?)", (user, action_id))
     con.commit()
 
 def insert_raw_cost_calculation_log(machine, material, quantity, unit, price):
@@ -55,7 +55,7 @@ def insert_raw_cost_calculation_log(machine, material, quantity, unit, price):
     cur.execute("SELECT creationId FROM rawCostCalculation WHERE machine = ? AND material = ? AND quantity = ? AND unit = ? AND price = ?", (machine, material, quantity, unit, price))
     action_id = cur.fetchone()[0]
     
-    cur.execute("INSERT INTO logs (user, actionType, creationId) VALUES (?, 'RAW cost calculation', ?)", ('admin', action_id))
+    cur.execute("INSERT INTO logs (user, actionType, creationId) VALUES (?, 'raw cost calculation', ?)", (mn.user.username, action_id))
     con.commit()
 
 # Drop table
@@ -81,7 +81,7 @@ def select_user_creation_logs():
             SELECT logs.timestamp, logs.user, userCreation.userCreated
             FROM logs
             INNER JOIN userCreation ON logs.creationId = userCreation.creationId
-            WHERE actionType = 'USER creation'
+            WHERE actionType = 'user creation'
             ORDER BY logs.timestamp DESC
         ''', con)
         # print(found)
@@ -95,7 +95,7 @@ def select_raw_cost_calculation_logs():
             SELECT rawCostCalculation.machine, rawCostCalculation.material, rawCostCalculation.quantity, rawCostCalculation.unit, rawCostCalculation.price
             FROM logs
             INNER JOIN rawCostCalculation ON logs.creationId = rawCostCalculation.creationId
-            WHERE actionType = 'RAW cost calculation'
+            WHERE actionType = 'raw cost calculation'
             ORDER BY logs.timestamp DESC
         ''', con)
         # print(found)
